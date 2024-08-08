@@ -28,57 +28,9 @@ import Footer from "../components/Footer.astro";
 
         //Cargar datos de todos los productos: 
         const contenedorCarritoProductos = document.querySelector("#carrito-productos");
-        const datosProductos = 
-        [
-            {
-                slug:"macbook-air-m2",
-                img:"https://i.pinimg.com/originals/b2/39/21/b2392123978a9779bb008b049c57fbec.png",
-                title:"MacBook Air 13 M2 chip",
-                body:"Up to 1.4x faster than MacBook Air with the M1 chip21, Support for one external display, Support for Wi-Fi 6",
-                href:"",
-                precio: "499999"
-            },
-            {
-                img:"https://www.pngall.com/wp-content/uploads/5/Apple-IPad-PNG-File-Download-Free.png",
-                title:"MacBook Air 13 M2 chip",
-                body:"Up to 1.4x faster than MacBook Air with the M1 chip21, Support for one external display, Support for Wi-Fi 6",
-                href:"",
-                slug:"ipad1",
-                precio: "299999"
-            },
-            {
-                img:"https://purepng.com/public/uploads/large/purepng.com-apple-iphone-xappleapple-iphonephonesmartphonemobile-devicetouch-screeniphone-xiphone-10electronicsobjects-2515306895701eqxj.png",
-                title:"MacBook Air 13 M2 chip",
-                body:"Up to 1.4x faster than MacBook Air with the M1 chip21, Support for one external display, Support for Wi-Fi 6",
-                href:"",
-                slug:"Iphone1",
-                precio: "100000"
-            },
-            {
-                img:"https://i.pinimg.com/originals/cc/8b/70/cc8b70ed6b81820f019dc1359dd8875d.png",
-                title:"MacBook Air 13 M2 chip",
-                body:"Up to 1.4x faster than MacBook Air with the M1 chip21, Support for one external display, Support for Wi-Fi 6",
-                href:"",
-                slug:"watch",
-                precio: "50000"
-            },
-            {
-                img:"https://www.pngall.com/wp-content/uploads/14/Airpod-Transparent.png",
-                title:"MacBook Air 13 M2 chip",
-                body:"Up to 1.4x faster than MacBook Air with the M1 chip21, Support for one external display, Support for Wi-Fi 6",
-                href:"",
-                slug:"airpods",
-                precio: "30000"
-            },
-            {
-                img:"https://upload.wikimedia.org/wikipedia/commons/3/31/Apple_TV_4K_4gen_64gb.png",
-                title:"MacBook Air 13 M2 chip",
-                body:"Up to 1.4x faster than MacBook Air with the M1 chip21, Support for one external display, Support for Wi-Fi 6",
-                href:"",
-                slug:"tv",
-                precio: "49999"
-            }
-        ]
+        
+        import { productos } from './data';
+        const datosProductos = productos;
         
         //Agregar productos al carrito:
         const productosEnCarrito = JSON.parse(localStorage.getItem("productos-en-carrito"));

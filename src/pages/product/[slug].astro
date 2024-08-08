@@ -3,86 +3,18 @@ import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import Body from '../../components/Body.astro';
+import { productos } from '../data';
 
 export async function getStaticPaths() {
-
-  const productos = [
-    {
-      slug: "macbook-air-m2",
-      title: "MacBook Air 13 M2 chip",
-      description1: "Potente Rendimiento: El MacBook Air 13 M2 cuenta con el nuevo chip M2 para un rendimiento rapido y eficiente en todas las tareas.",
-      description2: "Pantalla Brillante: Disfruta de una pantalla Retina de alta resolucion para imagenes nitidas y colores vibrantes.",
-      description3: "Ligero: Delgado y ligero, es perfecto para llevarlo a todas partes.",
-      description4: "Conectividad Avanzada: Wi-Fi 6, Bluetooth 5.0 y puertos USB-C para una conectividad rapida y estable.",
-      description5: "Sistema Operativo macOS: Con macOS, disfruta de una experiencia informatica fluida y segura, con acceso a una amplia gama de aplicaciones.",
-      img : "https://i.pinimg.com/originals/b2/39/21/b2392123978a9779bb008b049c57fbec.png",
-      precio: "$499999",
-    },
-    {
-      slug: "ipad1",
-      title: "Ipad 1",
-      description1: "Pantalla Retina: El iPad presenta una pantalla Retina brillante y nítida que ofrece colores vibrantes y una alta resolución para una experiencia visual envolvente.",
-      description2: "Potente Chip: Equipado con el último chip de Apple, el iPad ofrece un rendimiento rápido y fluido, lo que permite ejecutar aplicaciones exigentes y multitarea sin problemas.",
-      description3: "Diseño Elegante: Con un diseño delgado y elegante, el iPad es fácil de sostener y transportar, perfecto para su uso en movimiento o en casa.",
-      description4: "Compatibilidad con Apple Pencil: Con la compatibilidad con Apple Pencil, el iPad se convierte en una herramienta creativa versátil, ideal para tomar notas, dibujar o editar fotos con precisión.",
-      description5: "iOS Integrado: Con iOS, el iPad ofrece una experiencia intuitiva y familiar, con acceso a una amplia gama de aplicaciones en la App Store y funciones como Split View para una productividad mejorada.",
-      img : "https://www.pngall.com/wp-content/uploads/5/Apple-IPad-PNG-File-Download-Free.png",
-      precio: "$299999"
-    },
-    {
-      slug: "Iphone1",
-      title: "Iphone 1",
-      description1: "Pantalla Super Retina: El iPhone cuenta con una impresionante pantalla Super Retina que ofrece colores vibrantes, negros profundos y una alta resolución para una experiencia visual cautivadora.",
-      description2: "Potente Chip A14 Bionic: Impulsado por el potente chip A14 Bionic, el iPhone ofrece un rendimiento excepcional y eficiencia energética, lo que permite ejecutar aplicaciones exigentes y juegos con fluidez.",
-      description3: "Diseño Elegante y Duradero: Con un diseño elegante y duradero, el iPhone combina vidrio y acero inoxidable en un cuerpo delgado y resistente, que se siente cómodo en la mano y es resistente al agua y al polvo.",
-      description4: "Cámara Avanzada: Equipado con una cámara avanzada con tecnología de vanguardia, el iPhone captura fotos y videos impresionantes en cualquier situación, desde retratos con efecto bokeh hasta imágenes de poca luz con calidad profesional.",
-      description5: "iOS Integrado: Con iOS, el iPhone ofrece una experiencia de usuario fluida y segura, con acceso a una amplia gama de aplicaciones en la App Store y funciones innovadoras como Face ID para desbloqueo facial seguro y Apple Pay para pagos rápidos y seguros.",
-      img: "https://purepng.com/public/uploads/large/purepng.com-apple-iphone-xappleapple-iphonephonesmartphonemobile-devicetouch-screeniphone-xiphone-10electronicsobjects-2515306895701eqxj.png",
-      precio: "$100000"
-    },
-    {
-      slug: "watch",
-      title: "Apple Watch",
-      description1: "Pantalla Retina Siempre Activa: El Apple Watch cuenta con una pantalla Retina Siempre Activa que muestra la hora y la información importante sin necesidad de levantar la muñeca, lo que permite una rápida y discreta consulta.",
-      description2: "Potente Chip S6: Impulsado por el chip S6 de Apple, el Apple Watch ofrece un rendimiento rápido y eficiente, lo que permite ejecutar aplicaciones y funciones con fluidez y rapidez.",
-      description3: "Diseño Elegante y Personalizable: Con un diseño elegante y una variedad de correas y estilos disponibles, el Apple Watch se adapta a tu estilo personal y es perfecto para cualquier ocasión, ya sea en el gimnasio o en una reunión formal.",
-      description4: "Funciones de Salud y Actividad: Equipado con funciones avanzadas de salud y actividad, como el monitoreo del ritmo cardíaco, el seguimiento del sueño y la detección de caídas, el Apple Watch te ayuda a mantenerte saludable y activo durante todo el día.",
-      description5: "Integración con el Ecosistema de Apple: Con la integración perfecta con el ecosistema de Apple, el Apple Watch te permite acceder a tus aplicaciones, música y notificaciones favoritas directamente desde tu muñeca, manteniéndote conectado y productivo en todo momento.",
-      img: "https://i.pinimg.com/originals/cc/8b/70/cc8b70ed6b81820f019dc1359dd8875d.png",
-      precio: "$50000"
-    },
-    {
-      slug: "airpods",
-      title: "AirPods Pro",
-      description1: "Calidad de Sonido Inigualable: Los AirPods ofrecen una calidad de sonido excepcional con bajos potentes y agudos claros, brindando una experiencia auditiva envolvente y nítida.",
-      description2: "Conexión Inalámbrica Instantánea: Gracias al chip H1 de Apple, los AirPods se conectan instantáneamente a tu dispositivo iOS tan pronto como los sacas del estuche de carga, lo que te permite disfrutar de tu música sin interrupciones.",
-      description3: "Diseño Cómodo y Ergonómico: Con un diseño ergonómico y liviano, los AirPods se adaptan cómodamente a tus oídos y son ideales para su uso durante todo el día, ya sea en la oficina, en el gimnasio o en movimiento.",
-      description4: "Funciones Inteligentes: Equipados con sensores ópticos y acelerómetros, los AirPods ofrecen funciones inteligentes como pausar la música automáticamente cuando te los quitas y reanudarla cuando te los vuelves a poner.",
-      description5: "Integración Perfecta con el Ecosistema de Apple: Con la integración perfecta con el ecosistema de Apple, los AirPods te permiten acceder a Siri con solo decir Oye Siri, responder llamadas, cambiar de canción y controlar el volumen con comandos de voz simples.",
-      img: "https://www.pngall.com/wp-content/uploads/14/Airpod-Transparent.png",
-      precio: "$30000"
-    },
-    {
-      slug: "tv",
-      title: "Apple TV",
-      description1: "Calidad de Transmisión 4K HDR: El Apple TV ofrece una experiencia de transmisión inigualable con calidad de imagen 4K HDR, que brinda colores vibrantes, contrastes intensos y una claridad excepcional para una experiencia visual inmersiva.",
-      description2: "Potente Chip A12 Bionic: Impulsado por el potente chip A12 Bionic de Apple, el Apple TV garantiza un rendimiento fluido y rápido al navegar por aplicaciones, jugar juegos y reproducir contenido multimedia de alta resolución.",
-      description3: "Diseño Compacto y Elegante: Con un diseño compacto y elegante, el Apple TV se integra perfectamente en cualquier espacio de entretenimiento, ya sea montado en la pared o colocado junto al televisor, agregando un toque de estilo moderno a tu hogar.",
-      description4: "Sistema Operativo tvOS: Con el sistema operativo tvOS, el Apple TV ofrece una experiencia de usuario intuitiva y personalizable, con acceso a una amplia variedad de aplicaciones, juegos y servicios de transmisión en la App Store.",
-      description5: "Integración con el Ecosistema de Apple: Con la integración perfecta con el ecosistema de Apple, el Apple TV te permite disfrutar del contenido de tus dispositivos iOS y Mac en la pantalla grande, así como controlar el Apple TV con tu iPhone, iPad o Apple Watch a través de la aplicación Remote.",
-      img: "https://upload.wikimedia.org/wikipedia/commons/3/31/Apple_TV_4K_4gen_64gb.png",
-      precio: "$49999"
-    }
-
-  ];
-  return productos.map(({ slug, title, description1, description2, description3, description4, description5, img, precio}) => {
+  const productos1 = productos;
+  return productos1.map(({ slug, title, body, img, precio}) => {
     return {
       params: { slug },
-      props: { slug, title, description1, description2, description3, description4, description5, img, precio},
+      props: { slug, title, body, img, precio},
     };
   });
 }
-const { slug, title, description1, description2, description3, description4, description5, img, precio } = Astro.props;
+const { slug, title, body, img, precio } = Astro.props;
 
 ---
 <Layout>
@@ -179,11 +111,7 @@ const { slug, title, description1, description2, description3, description4, des
     <div class="description-container">
       <h2 class="product-description">Descripcion</h2>
       <div class="linea"></div>
-      <p class="product-description">{description1}</p>
-      <p class="product-description">{description2}</p>
-      <p class="product-description">{description3}</p>
-      <p class="product-description">{description4}</p>
-      <p class="product-description">{description5}</p>
+      <p class="product-description">{body}</p>
     </div>
   </Body>
   <Footer />
