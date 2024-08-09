@@ -45,7 +45,7 @@ import Footer from "../components/Footer.astro";
                     productosEnCarrito.forEach((producto: { id: string, cantidad: number }) => {
                         const slug = producto.id;
                         let cantidad = producto.cantidad;
-                        const productoEncontrado = datosProductos.find(p => p.id === slug);
+                        const productoEncontrado = datosProductos.find((p: { id: string }) => p.id === slug);
     
                         if (productoEncontrado) {
                             console.log("Producto encontrado.", productoEncontrado);

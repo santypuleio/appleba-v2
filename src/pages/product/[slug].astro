@@ -6,7 +6,7 @@ import Body from '../../components/Body.astro';
 import { productos } from '../../../db.json';
 
 export async function getStaticPaths() {
-  return productos.map(({ id, titulo, descripcion, linkImagen, precio }) => {
+  return productos.map(({ id, titulo, descripcion, linkImagen, precio }: { id: string, titulo: string, descripcion: string, linkImagen: string, precio: string }) => {
     return {
       params: { slug: id },
       props: { id, titulo, descripcion, linkImagen, precio },
