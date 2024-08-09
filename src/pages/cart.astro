@@ -10,6 +10,15 @@ import Footer from "../components/Footer.astro";
     
     <script>
         import { productos } from '../../db.json';
+
+        export async function getStaticProps() {
+        return {
+            props: {
+            productos
+            }
+        };
+        }
+
         let sumadorPrecio = 0;
     
         // Asegurarse de que el DOM esté completamente cargado antes de ejecutar el script

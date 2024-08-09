@@ -5,6 +5,7 @@ import Footer from '../../components/Footer.astro';
 import Body from '../../components/Body.astro';
 import { productos } from '../../../db.json';
 
+
 export async function getStaticPaths() {
   return productos.map(({ id, titulo, descripcion, linkImagen, precio }: { id: string, titulo: string, descripcion: string, linkImagen: string, precio: string }) => {
     return {
