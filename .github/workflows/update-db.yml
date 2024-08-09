@@ -1,0 +1,26 @@
+name: Update db.json
+
+on:
+  push:
+    branches:
+      - master  # O la rama que estés utilizando
+
+jobs:
+  update-db:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Update db.json
+      run: |
+        # Aquí agregas el código que modifica db.json
+        echo "{\"productos\": [{\"id\": \"1\", \"titulo\": \"Producto Actualizado\", \"precio\": \"30.0\"}]}" > db.json
+
+    - name: Commit changes
+      uses: EndBug/add-and-commit@v9
+      with:
+        author_name: 'GitHub Actions'
+        author_email: 'actions@github.com'
+        message: 'Actualizar db.json con nuevos datos'
