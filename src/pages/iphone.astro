@@ -4,25 +4,91 @@ import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import Body from '../components/Body.astro';
 import Card from '../components/Card.astro';
----
 
+interface Producto {
+  id: string;
+  titulo: string;
+  descripcion: string;
+  precio: string;
+  linkImagen: string;
+  seccion: string;
+}
+
+let productosMac: Producto[] = [];
+
+// Cargar los productos desde el servidor
+try {
+  const response = await fetch('http://localhost:3000/productos');
+  if (response.ok) {
+    const productos: Producto[] = await response.json();
+    // Filtrar los productos que pertenecen a la sección "Mac"
+    productosMac = productos.filter((producto: Producto) => producto.seccion === 'Iphone');
+  } else {
+    console.error('Error al cargar los productos');
+  }
+} catch (error) {
+  console.error('Error en la solicitud: ', error);
+}
+---
 <Layout>
   <Navbar />
   <Body title="Iphone">
     <h2 class="tituloProducto">Iphone 1</h2>
-    
+    <ul id="seccion-mac" class="link-card-container">
+      {productosMac.map((producto) => (
+        <Card
+          img={producto.linkImagen}
+          title={producto.titulo}
+          body={producto.descripcion}
+          href={`/product/${producto.id}`}
+          slug={producto.id}
+          precio={producto.precio}
+        />
+      ))}
+    </ul>
   </Body>
   <Footer />
 </Layout>
 
 <style>
-  body{
+  body {
     background-color: #333;
   }
-  .tituloProducto{
+
+  .tituloProducto {
     width: 100%;
     color: aliceblue;
     text-align: center;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+
+  .link-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centramos los elementos horizontalmente */
+    gap: 1rem;
+    list-style: none; /* Eliminar los puntos del ul */
+    padding: 0; /* Eliminar padding del ul */
+    margin: 0 auto; /* Centramos el ul */
+    width: 100%;
+  }
+
+  .link-card-container > * {
+    flex: 1 1 calc(25% - 1rem); /* Flexibilidad en el tamaño del card */
+    max-width: calc(25% - 1rem); /* Tamaño máximo del card */
+  }
+
+  @media (max-width: 768px) {
+    .link-card-container > * {
+      flex: 1 1 calc(50% - 1rem); /* En pantallas pequeñas, 2 elementos por fila */
+      max-width: calc(50% - 1rem);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .link-card-container > * {
+      flex: 1 1 100%; /* En pantallas muy pequeñas, 1 elemento por fila */
+      max-width: 100%;
+    }
   }
 </style>

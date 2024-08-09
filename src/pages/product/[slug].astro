@@ -3,27 +3,27 @@ import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import Body from '../../components/Body.astro';
-import { productos } from '../data';
+import { productos } from '../../../db.json';
 
 export async function getStaticPaths() {
-  const productos1 = productos;
-  return productos1.map(({ slug, title, body, img, precio}) => {
+  return productos.map(({ id, titulo, descripcion, linkImagen, precio }) => {
     return {
-      params: { slug },
-      props: { slug, title, body, img, precio},
+      params: { slug: id },
+      props: { id, titulo, descripcion, linkImagen, precio },
     };
   });
 }
-const { slug, title, body, img, precio } = Astro.props;
 
+const { id, titulo, descripcion, linkImagen, precio } = Astro.props;
 ---
+
 <Layout>
   <Navbar />
   <Body>
-    <img src={img} alt="" class="product-image" />
+    <img src={linkImagen} alt="" class="product-image" />
     <div class="product-info-container">
-      <h2 class="product-title">{title}</h2>
-      <p class="product-price">{precio}</p>
+      <h2 class="product-title">{titulo}</h2>
+      <p class="product-price">${precio}</p>
       <div class="medios-pago">
         <p class="product-description">Medios de pago</p>
         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-building-bank" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -62,7 +62,6 @@ const { slug, title, body, img, precio } = Astro.props;
           </svg>
           <p class="product-description">Envio GRATIS a Capital Federal</p>
         </div>
-        
         <div class="retiro1">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-building-store" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -76,131 +75,165 @@ const { slug, title, body, img, precio } = Astro.props;
         </div>
       </div>
       <div class="button-container">
-        
-        <script>
-          import { getProductosEnCarrito } from './productContainer'; 
-          const button = document.querySelector('button.add-to-cart-button');
-          button.addEventListener('click', () => {
-            const productId = button.id;
-            let productosEnCarrito = getProductosEnCarrito();
-            let productoEnCarrito = productosEnCarrito.find(producto => producto.id === productId);
-            if(productoEnCarrito){
-              productoEnCarrito.cantidad++;
-              console.log("Ya está en el carrito.")
-            }
-            else{
-                  // Si el producto no está en el carrito, agrégalo con cantidad 1
-                  productoEnCarrito = {
-                      id: productId,
-                      cantidad: 1
-                    };
-                    productosEnCarrito.push(productoEnCarrito);
-                    console.log(`Se agregó el producto ${productId} al carrito.`);
-                }
-            localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito))
-            console.log(productosEnCarrito);
-            alert("El producto fue agregado al carrito");
-          });
-        </script>
-        <button class="add-to-cart-button" id={slug}>Agregar al carrito</button>
-    
+        <button class="add-to-cart-button" id={id}>Agregar al carrito</button>
       </div>
-    
-    
     </div>
     <div class="description-container">
       <h2 class="product-description">Descripcion</h2>
       <div class="linea"></div>
-      <p class="product-description">{body}</p>
+      <p class="product-description">{descripcion}</p>
     </div>
   </Body>
   <Footer />
 </Layout>
 
+<script>
+  import { getProductosEnCarrito } from './productContainer'; 
+
+  // Asegurarse de que el DOM esté completamente cargado antes de ejecutar el script
+  document.addEventListener('DOMContentLoaded', () => {
+    const button = document.querySelector('button.add-to-cart-button');
+
+    // Verificar que el botón exista en el DOM
+    if (button) {
+      button.addEventListener('click', () => {
+        const productId = button.id;
+        let productosEnCarrito: { id: string, cantidad: number }[] = getProductosEnCarrito() || []; // Asegurarse de que productosEnCarrito sea un array
+        
+        // Buscar si el producto ya está en el carrito
+        let productoEnCarrito = productosEnCarrito.find((producto: { id: string }) => producto.id === productId);
+        
+        if (productoEnCarrito) {
+          productoEnCarrito.cantidad++;
+          console.log("Ya está en el carrito.");
+        } else {
+          // Si el producto no está en el carrito, agrégalo con cantidad 1
+          productoEnCarrito = {
+            id: productId,
+            cantidad: 1
+          };
+          productosEnCarrito.push(productoEnCarrito);
+          console.log(`Se agregó el producto ${productId} al carrito.`);
+        }
+
+        // Guardar el carrito actualizado en localStorage
+        localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
+        console.log(productosEnCarrito);
+        alert("El producto fue agregado al carrito");
+      });
+    } else {
+      console.error('El botón de agregar al carrito no se encontró en el DOM.');
+    }
+  });
+</script>
+
+
 <style>
-  /* Estilo del contenedor del cuerpo */
-  body{
+  body {
     background-color: #333;
   }
 
-/* Estilo de la imagen */
-.product-image {
-  width: 40%; /* Ocupa el 50% del ancho de la página */
-  height: 30rem;
-  float: left; /* Hace que la imagen flote a la izquierda */
-  margin-right: 2rem; /* Espacio entre la imagen y el texto */
-}
-.product-info-container {
-  display: inline;
-  width: 46%;
-  border: 1.2px solid black;
-  border-radius: 1cap;
-  margin-left: 1rem; /* Agrega un margen izquierdo */
-  padding: 1rem; /* Agrega un espacio interno */
-}
+  .product-image {
+    width: 40%;
+    height: 30rem;
+    float: left;
+    margin-right: 2rem;
+  }
 
-/* Estilo del título */
-.product-title {
-  height: fit-content;
-  color: white;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  font-weight: bold;
-  margin-top: 0; /* Elimina el margen superior para que el título esté pegado a la imagen */
-  overflow: hidden; /* Evita que el título se superponga a la imagen */
-  font-size: 1.8rem;
-}
+  .product-info-container {
+    display: inline-block;
+    width: 46%;
+    border: 1.2px solid black;
+    border-radius: 4px;
+    margin-left: 1rem;
+    padding: 1rem;
+  }
 
-/* Estilo de la descripción */
-.product-description {
-  color: white;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
+  .product-title {
+    height: fit-content;
+    color: white;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: bold;
+    margin-top: 0;
+    overflow: hidden;
+    font-size: 1.8rem;
+  }
 
-/* Estilo del precio */
-.product-price{
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  color: white;
-  font-size: 2rem;
-  margin-top: 0;
-}
+  .product-description {
+    color: white;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
 
-.button-container{
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-}
-/* Estilo del botón */
-.add-to-cart-button {
-  background-color: #007bff; /* Color de fondo del botón */
-  color: white; /* Color del texto del botón */
-  border: none;
-  padding: 10px 20px; /* Espaciado interno del botón */
-  border-radius: 5px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  font-size: 16px;
-}
+  .product-price {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: white;
+    font-size: 2rem;
+    margin-top: 0;
+  }
 
-.add-to-cart-button:hover {
-  background-color: #0056b3; /* Color de fondo del botón al pasar el ratón */
-}
+  .button-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+  }
 
-.retiro1{
-  display: flex;
-  align-items: center;
-}
+  .add-to-cart-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+  }
 
-.description-container{
-  width: 100%;
-  display: inline-block;
-  text-align: center;
-}
+  .add-to-cart-button:hover {
+    background-color: #0056b3;
+  }
 
-.linea{
-  width: 80%; /* Ocupa el 80% del ancho del contenedor padre */
-  margin: 0 auto; /* Centra la línea horizontalmente */
-  border-bottom: 2px solid black; /* Grosor y color de la línea */
-}
+  .retiro1 {
+    display: flex;
+    align-items: center;
+  }
 
+  .description-container {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .linea {
+    width: 80%;
+    margin: 0 auto;
+    border-bottom: 2px solid black;
+  }
+
+  @media (max-width: 768px) {
+    .product-image {
+      width: 100%;
+      height: auto;
+      margin-bottom: 1rem;
+      float: none;
+      margin-top: 4rem;
+    }
+
+    .product-info-container {
+      width: 100%;
+      margin-left: 0;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .description-container {
+      width: 100%;
+      text-align: left;
+      padding: 0 1rem;
+    }
+
+    .button-container {
+      margin-top: 20px;
+    }
+  }
 </style>
