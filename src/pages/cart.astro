@@ -9,20 +9,7 @@ import Footer from "../components/Footer.astro";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <script>
-        import { productos } from '../../db.json';
-
-        export async function getStaticProps() {
-        return {
-            props: {
-            productos
-            }
-        };
-        }
-
-        let sumadorPrecio = 0;
-    
-        // Asegurarse de que el DOM esté completamente cargado antes de ejecutar el script
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const botonVaciarCarrito = document.querySelector("#carrito-acciones-vaciar");
             const contenedorCarritoProductos = document.querySelector("#carrito-productos");
             const totalElement = document.getElementById("total");
@@ -42,13 +29,20 @@ import Footer from "../components/Footer.astro";
                     localStorage.setItem('sumadorPrecio', sumadorPrecio.toString());
                     totalElement.innerText = "$" + sumadorPrecio;
                 });
-    
-                // Cargar datos de todos los productos:
-                
-                const datosProductos = productos;
+
+                // Cargar datos de todos los productos desde el endpoint
+                let datosProductos = [];
+                try {
+                    const response = await fetch('https://quasar-scientific-sidewalk.glitch.me/productos');
+                    datosProductos = await response.json();
+                } catch (error) {
+                    console.error('Error al cargar los productos:', error);
+                }
     
                 const productosEnCarrito = JSON.parse(localStorage.getItem("productos-en-carrito") || "[]");
                 console.log(productosEnCarrito);
+    
+                let sumadorPrecio = 0; // Inicializar el sumadorPrecio
     
                 if (productosEnCarrito.length > 0) {
                     productosEnCarrito.forEach((producto: { id: string, cantidad: number }) => {
@@ -169,18 +163,20 @@ import Footer from "../components/Footer.astro";
                 const buyNowButton = document.querySelector(".carrito-acciones-comprar");
                 if (buyNowButton) {
                     buyNowButton.addEventListener('click', () => {
-                        let mensaje = "Hola, me gustaría comprar: \n";
-                        for (let i = 0; i < productosEnCarrito.length; i++) {
-                            mensaje += `Producto: ${productosEnCarrito[i].id}. Cantidad: ${productosEnCarrito[i].cantidad}\n`;
+                        const productosEnCarrito = JSON.parse(localStorage.getItem("productos-en-carrito") || "[]");
+                        if (productosEnCarrito.length > 0) {
+                            // Implementar la funcionalidad para la compra aquí
+                            alert("¡Gracias por su compra!");
+                            localStorage.removeItem("productos-en-carrito");
+                            contenedorCarritoProductos.innerHTML = '';
+                            sumadorPrecio = 0;
+                            localStorage.setItem('sumadorPrecio', sumadorPrecio.toString());
+                            totalElement.innerText = "$" + sumadorPrecio;
+                        } else {
+                            alert("Tu carrito está vacío.");
                         }
-                        mensaje += "Precio Total: $" + sumadorPrecio;
-                        console.log(mensaje);
-                        const url = `https://wa.me/+5491155819394?text=${encodeURIComponent(mensaje)}`;
-                        window.location.href = url;
                     });
                 }
-            } else {
-                console.error("Algunos elementos del DOM no se encontraron.");
             }
         });
     </script>

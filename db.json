@@ -1,12 +1,5 @@
 {
   "productos": [
-    {
-      "id": "1",
-      "titulo": "1",
-      "descripcion": "1",
-      "precio": "1",
-      "linkImagen": "1",
-      "seccion": "Mac"
-    }
+    
   ]
 }

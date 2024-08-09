@@ -3,11 +3,21 @@ import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import Body from '../../components/Body.astro';
-import { productos } from '../../../db.json';
 
+// Define the interface for product data
+interface Producto {
+  id: string;
+  titulo: string;
+  descripcion: string;
+  linkImagen: string;
+  precio: string;
+}
 
 export async function getStaticPaths() {
-  return productos.map(({ id, titulo, descripcion, linkImagen, precio }: { id: string, titulo: string, descripcion: string, linkImagen: string, precio: string }) => {
+  const res = await fetch('https://quasar-scientific-sidewalk.glitch.me/productos');
+  const productos: Producto[] = await res.json();
+
+  return productos.map(({ id, titulo, descripcion, linkImagen, precio }) => {
     return {
       params: { slug: id },
       props: { id, titulo, descripcion, linkImagen, precio },
@@ -16,6 +26,7 @@ export async function getStaticPaths() {
 }
 
 const { id, titulo, descripcion, linkImagen, precio } = Astro.props;
+
 ---
 
 <Layout>
@@ -91,43 +102,40 @@ const { id, titulo, descripcion, linkImagen, precio } = Astro.props;
 <script>
   import { getProductosEnCarrito } from './productContainer'; 
 
-  // Asegurarse de que el DOM esté completamente cargado antes de ejecutar el script
-  document.addEventListener('DOMContentLoaded', () => {
-    const button = document.querySelector('button.add-to-cart-button');
+document.addEventListener('DOMContentLoaded', () => {
+  const button = document.querySelector('button.add-to-cart-button');
 
-    // Verificar que el botón exista en el DOM
-    if (button) {
-      button.addEventListener('click', () => {
-        const productId = button.id;
-        let productosEnCarrito: { id: string, cantidad: number }[] = getProductosEnCarrito() || []; // Asegurarse de que productosEnCarrito sea un array
-        
-        // Buscar si el producto ya está en el carrito
-        let productoEnCarrito = productosEnCarrito.find((producto: { id: string }) => producto.id === productId);
-        
-        if (productoEnCarrito) {
-          productoEnCarrito.cantidad++;
-          console.log("Ya está en el carrito.");
-        } else {
-          // Si el producto no está en el carrito, agrégalo con cantidad 1
-          productoEnCarrito = {
-            id: productId,
-            cantidad: 1
-          };
-          productosEnCarrito.push(productoEnCarrito);
-          console.log(`Se agregó el producto ${productId} al carrito.`);
-        }
+  if (button) {
+    button.addEventListener('click', () => {
+      const productId = button.id;
+      let productosEnCarrito: { id: string, cantidad: number }[] = getProductosEnCarrito() || []; // Asegurarse de que productosEnCarrito sea un array
 
-        // Guardar el carrito actualizado en localStorage
-        localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
-        console.log(productosEnCarrito);
-        alert("El producto fue agregado al carrito");
-      });
-    } else {
-      console.error('El botón de agregar al carrito no se encontró en el DOM.');
-    }
-  });
+      // Añadir tipo explícito para el parámetro producto
+      let productoEnCarrito = productosEnCarrito.find((producto: { id: string }) => producto.id === productId);
+
+      if (productoEnCarrito) {
+        productoEnCarrito.cantidad++;
+        console.log(`Ya está en el carrito.`);
+      } else {
+        // Si el producto no está en el carrito, agrégalo con cantidad 1
+        productoEnCarrito = {
+          id: productId,
+          cantidad: 1
+        };
+        productosEnCarrito.push(productoEnCarrito);
+        console.log(`Se agregó el producto ${productId} al carrito.`);
+      }
+
+      // Guardar el carrito actualizado en localStorage
+      localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
+      console.log(productosEnCarrito);
+      alert("El producto fue agregado al carrito");
+    });
+  } else {
+    console.error('El botón de agregar al carrito no se encontró en el DOM.');
+  }
+});
 </script>
-
 
 <style>
   body {

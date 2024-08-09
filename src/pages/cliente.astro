@@ -9,61 +9,62 @@ import Body from '../components/Body.astro';
   <Navbar />
   <Body title="Cliente">
     <div class="content-center">
-      <h2 class="tituloProducto">Agregar producto: </h2>
+      <h2 class="tituloProducto">Agregar producto:</h2>
       <div class="form-container">
-          <form id="agregarForm">
-              <label for="idAgregar">ID:</label>
-              <input type="text" id="idAgregar" name="id" required>
+        <form id="agregarForm">
+          <label for="idAgregar">ID:</label>
+          <input type="text" id="idAgregar" name="id" required>
 
-              <label for="tituloAgregar">Titulo:</label>
-              <input type="text" id="tituloAgregar" name="titulo" required>
+          <label for="tituloAgregar">Titulo:</label>
+          <input type="text" id="tituloAgregar" name="titulo" required>
 
-              <label for="descripcionAgregar">Descripcion:</label>
-              <textarea id="descripcionAgregar" name="descripcion" rows="4" required></textarea>
+          <label for="descripcionAgregar">Descripcion:</label>
+          <textarea id="descripcionAgregar" name="descripcion" rows="4" required></textarea>
 
-              <label for="precioAgregar">Precio:</label>
-              <input type="number" id="precioAgregar" name="precio" required>
+          <label for="precioAgregar">Precio:</label>
+          <input type="number" id="precioAgregar" name="precio" required>
 
-              <label for="linkImagenAgregar">Link Imagen:</label>
-              <input type="url" id="linkImagenAgregar" name="linkImagen" required>
+          <label for="linkImagenAgregar">Link Imagen:</label>
+          <input type="url" id="linkImagenAgregar" name="linkImagen" required>
 
-              <label for="seccionAgregar">Seccion:</label>
-              <select id="seccionAgregar" name="seccion" required>
-                  <option value="Mac">Mac</option>
-                  <option value="Ipad">Ipad</option>
-                  <option value="Iphone">Iphone</option>
-                  <option value="Watch">Watch</option>
-                  <option value="AirPods">AirPods</option>
-                  <option value="Tv">Tv y Casa</option>
-              </select>
+          <label for="seccionAgregar">Seccion:</label>
+          <select id="seccionAgregar" name="seccion" required>
+            <option value="Mac">Mac</option>
+            <option value="Ipad">Ipad</option>
+            <option value="Iphone">Iphone</option>
+            <option value="Watch">Watch</option>
+            <option value="AirPods">AirPods</option>
+            <option value="Accesorios">Accesorios</option>
+          </select>
 
-              <button id="agregar" type="button">Agregar</button>
-          </form>
+          <button id="agregar" type="button">Agregar</button>
+        </form>
       </div>
       
-      <h2 class="tituloProducto">Modificar Precio Producto: </h2>
+      <h2 class="tituloProducto">Modificar Precio Producto:</h2>
       <div class="form-container">
         <form id="modificarForm">
-            <label for="idModificar">ID:</label>
-            <input type="text" id="idModificar" name="id" required>
-            <label for="tituloModificar">Titulo:</label>
-            <input type="text" id="tituloModificar" name="titulo" required>
-            <label for="precioModificar">Precio:</label>
-            <input type="number" id="precioModificar" name="precio" required>
-            <button id="modificar" type="button">Modificar</button>
+          
+          <label for="tituloModificar">Titulo:</label>
+          <input type="text" id="tituloModificar" name="titulo" required>
+          
+          <label for="precioModificar">Precio:</label>
+          <input type="number" id="precioModificar" name="precio" required>
+          
+          <button id="modificar" type="button">Modificar</button>
         </form>
-        </div>
+      </div>
 
-      <h2 class="tituloProducto">Eliminar producto: </h2>
+      <h2 class="tituloProducto">Eliminar producto:</h2>
       <div class="form-container">
         <form id="eliminarForm">
-            <label for="idEliminar">ID:</label>
-            <input type="text" id="idEliminar" name="id" required>
-            <label for="tituloEliminar">Titulo:</label>
-            <input type="text" id="tituloEliminar" name="titulo" required>
-            <button id="eliminar" type="button">Eliminar</button>
+          
+          <label for="tituloEliminar">Titulo:</label>
+          <input type="text" id="tituloEliminar" name="titulo" required>
+          
+          <button id="eliminar" type="button">Eliminar</button>
         </form>
-    </div>
+      </div>
     </div>
   </Body>
   <Footer />
@@ -71,10 +72,10 @@ import Body from '../components/Body.astro';
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const agregarButton = document.getElementById('agregar');
+    // Agregar producto
+    const agregarButton = document.getElementById('agregar') as HTMLButtonElement;
     if (agregarButton) {
       agregarButton.addEventListener('click', async function() {
-        // Obtén los valores de los campos del formulario
         const idElement = document.getElementById('idAgregar') as HTMLInputElement;
         const tituloElement = document.getElementById('tituloAgregar') as HTMLInputElement;
         const descripcionElement = document.getElementById('descripcionAgregar') as HTMLTextAreaElement;
@@ -90,9 +91,8 @@ import Body from '../components/Body.astro';
           const linkImagen = linkImagenElement.value;
           const seccion = seccionElement.value;
 
-          // Envía los datos a JSON Server
           try {
-            const response = await fetch('http://localhost:3000/productos', {
+            const response = await fetch('https://quasar-scientific-sidewalk.glitch.me/productos', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -124,172 +124,172 @@ import Body from '../components/Body.astro';
       console.error('No se pudo encontrar el botón de agregar.');
     }
 
+    // Modificar precio producto
+    const modificarButton = document.getElementById('modificar') as HTMLButtonElement;
+    if (modificarButton) {
+      modificarButton.addEventListener('click', async function() {
+        const idElement = document.getElementById('idModificar') as HTMLInputElement;
+        const tituloElement = document.getElementById('tituloModificar') as HTMLInputElement;
+        const precioElement = document.getElementById('precioModificar') as HTMLInputElement;
 
-        // Modificar precio producto
-        const modificarButton = document.getElementById('modificar');
-if (modificarButton) {
-  modificarButton.addEventListener('click', async function() {
-    const idElement = document.getElementById('idModificar') as HTMLInputElement;
-    const tituloElement = document.getElementById('tituloModificar') as HTMLInputElement;
-    const precioElement = document.getElementById('precioModificar') as HTMLInputElement;
+        if (idElement && tituloElement && precioElement) {
+          const id = idElement.value;
+          const titulo = tituloElement.value;
+          const nuevoPrecio = precioElement.value;
 
-    if (idElement && tituloElement && precioElement) {
-      const id = idElement.value;
-      const titulo = tituloElement.value;
-      const nuevoPrecio = precioElement.value;
+          try {
+            let response;
+            let productos;
 
-      try {
-        let response;
-        let productos;
+            // Buscar el producto por ID
+            if (id) {
+              response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?id=${id}`);
+              productos = await response.json();
 
-        // Buscar el producto por ID
-        if (id) {
-          response = await fetch(`http://localhost:3000/productos?id=${id}`);
-          productos = await response.json();
+              if (productos.length > 0) {
+                // Producto encontrado por ID
+                const producto = productos[0];
+                producto.precio = nuevoPrecio;
 
-          if (productos.length > 0) {
-            // Producto encontrado por ID
-            const producto = productos[0];
-            producto.precio = nuevoPrecio;
+                const updateResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${producto.id}`, {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(producto)
+                });
 
-            const updateResponse = await fetch(`http://localhost:3000/productos/${producto.id}`, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(producto)
-            });
-
-            if (updateResponse.ok) {
-              alert('Precio modificado correctamente por ID.');
-              return;
-            } else {
-              alert('Hubo un error al modificar el precio.');
-              return;
-            }
-          }
-        }
-
-        // Si no se encuentra por ID o no se proporcionó ID, buscar por Título
-        if (titulo) {
-          response = await fetch(`http://localhost:3000/productos?titulo=${encodeURIComponent(titulo)}`);
-          productos = await response.json();
-
-          if (productos.length > 0) {
-            // Buscar coincidencia exacta por título
-            const producto = productos.find((p: any) => p.titulo === titulo);
-
-            if (producto) {
-              producto.precio = nuevoPrecio;
-
-              const updateResponse = await fetch(`http://localhost:3000/productos/${producto.id}`, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(producto)
-              });
-
-              if (updateResponse.ok) {
-                alert('Precio modificado correctamente por Título.');
-              } else {
-                alert('Hubo un error al modificar el precio.');
+                if (updateResponse.ok) {
+                  alert('Precio modificado correctamente por ID.');
+                  return;
+                } else {
+                  alert('Hubo un error al modificar el precio.');
+                  return;
+                }
               }
-            } else {
-              alert('No se encontró un producto con ese título exacto.');
             }
-          } else {
-            alert('No se encontró el producto ni por ID ni por Título.');
-          }
-        }
-      } catch (error) {
-        console.error('Error en la solicitud: ', error);
-        alert('Hubo un error al modificar el precio.');
-      }
-    } else {
-      console.error('No se pudo encontrar uno o más elementos del formulario.');
-    }
-  });
-} else {
-  console.error('No se pudo encontrar el botón de modificar.');
-}
 
-    const eliminarButton = document.getElementById('eliminar');
-if (eliminarButton) {
-  eliminarButton.addEventListener('click', async function() {
-    const idElement = document.getElementById('idEliminar') as HTMLInputElement;
-    const tituloElement = document.getElementById('tituloEliminar') as HTMLInputElement;
+            // Si no se encuentra por ID o no se proporcionó ID, buscar por Título
+            if (titulo) {
+              response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}`);
+              productos = await response.json();
 
-    if (idElement && tituloElement) {
-      const id = idElement.value;
-      const titulo = tituloElement.value;
+              if (productos.length > 0) {
+                // Buscar coincidencia exacta por título
+                const producto = productos.find((p: { titulo: string }) => p.titulo === titulo);
 
-      try {
-        let response;
-        let productos;
+                if (producto) {
+                  producto.precio = nuevoPrecio;
 
-        // Buscar el producto por ID
-        if (id) {
-          response = await fetch(`http://localhost:3000/productos?id=${id}`);
-          productos = await response.json();
+                  const updateResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${producto.id}`, {
+                    method: 'PUT',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(producto)
+                  });
 
-          if (productos.length > 0) {
-            const producto = productos[0];
-
-            const deleteResponse = await fetch(`http://localhost:3000/productos/${producto.id}`, {
-              method: 'DELETE',
-            });
-
-            if (deleteResponse.ok) {
-              alert('Producto eliminado correctamente por ID.');
-              return;
-            } else {
-              alert('Hubo un error al eliminar el producto.');
-              return;
-            }
-          }
-        }
-
-        // Si no se encuentra por ID o no se proporcionó ID, buscar por Título
-        if (titulo) {
-          response = await fetch(`http://localhost:3000/productos?titulo=${encodeURIComponent(titulo)}`);
-          productos = await response.json();
-
-          if (productos.length > 0) {
-            // Buscar coincidencia exacta por título
-            const producto = productos.find((p: any) => p.titulo === titulo);
-
-            if (producto) {
-              const deleteResponse = await fetch(`http://localhost:3000/productos/${producto.id}`, {
-                method: 'DELETE',
-              });
-
-              if (deleteResponse.ok) {
-                alert('Producto eliminado correctamente por Título.');
+                  if (updateResponse.ok) {
+                    alert('Precio modificado correctamente por Título.');
+                  } else {
+                    alert('Hubo un error al modificar el precio.');
+                  }
+                } else {
+                  alert('No se encontró un producto con ese título exacto.');
+                }
               } else {
-                alert('Hubo un error al eliminar el producto.');
+                alert('No se encontró el producto ni por ID ni por Título.');
               }
-            } else {
-              alert('No se encontró un producto con ese título exacto.');
             }
-          } else {
-            alert('No se encontró el producto ni por ID ni por Título.');
+          } catch (error) {
+            console.error('Error en la solicitud: ', error);
+            alert('Hubo un error al modificar el precio.');
           }
+        } else {
+          console.error('No se pudo encontrar uno o más elementos del formulario.');
         }
-      } catch (error) {
-        console.error('Error en la solicitud: ', error);
-        alert('Hubo un error al eliminar el producto.');
-      }
+      });
     } else {
-      console.error('No se pudo encontrar uno o más elementos del formulario.');
+      console.error('No se pudo encontrar el botón de modificar.');
     }
-  });
-} else {
-  console.error('No se pudo encontrar el botón de eliminar.');
-}
 
+    // Eliminar producto
+    const eliminarButton = document.getElementById('eliminar') as HTMLButtonElement;
+    if (eliminarButton) {
+      eliminarButton.addEventListener('click', async function() {
+        const idElement = document.getElementById('idEliminar') as HTMLInputElement;
+        const tituloElement = document.getElementById('tituloEliminar') as HTMLInputElement;
+
+        if (idElement && tituloElement) {
+          const id = idElement.value;
+          const titulo = tituloElement.value;
+
+          try {
+            let response;
+            let productos;
+
+            // Buscar el producto por ID
+            if (id) {
+              response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?id=${id}`);
+              productos = await response.json();
+
+              if (productos.length > 0) {
+                const producto = productos[0];
+
+                const deleteResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${producto.id}`, {
+                  method: 'DELETE',
+                });
+
+                if (deleteResponse.ok) {
+                  alert('Producto eliminado correctamente por ID.');
+                  return;
+                } else {
+                  alert('Hubo un error al eliminar el producto.');
+                  return;
+                }
+              }
+            }
+
+            // Si no se encuentra por ID o no se proporcionó ID, buscar por Título
+            if (titulo) {
+              response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}`);
+              productos = await response.json();
+
+              if (productos.length > 0) {
+                // Buscar coincidencia exacta por título
+                const producto = productos.find((p: { titulo: string }) => p.titulo === titulo);
+
+                if (producto) {
+                  const deleteResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${producto.id}`, {
+                    method: 'DELETE',
+                  });
+
+                  if (deleteResponse.ok) {
+                    alert('Producto eliminado correctamente por Título.');
+                  } else {
+                    alert('Hubo un error al eliminar el producto.');
+                  }
+                } else {
+                  alert('No se encontró un producto con ese título exacto.');
+                }
+              } else {
+                alert('No se encontró el producto ni por ID ni por Título.');
+              }
+            }
+          } catch (error) {
+            console.error('Error en la solicitud: ', error);
+            alert('Hubo un error al eliminar el producto.');
+          }
+        } else {
+          console.error('No se pudo encontrar uno o más elementos del formulario.');
+        }
+      });
+    } else {
+      console.error('No se pudo encontrar el botón de eliminar.');
+    }
   });
 </script>
+
 
 <style>
   body {

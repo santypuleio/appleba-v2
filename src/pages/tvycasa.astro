@@ -1,40 +1,42 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
-import Footer from '../components/Footer.astro';
-import Body from '../components/Body.astro';
-import Card from '../components/Card.astro';
+  import Layout from '../layouts/Layout.astro';
+  import Navbar from '../components/Navbar.astro';
+  import Footer from '../components/Footer.astro';
+  import Body from '../components/Body.astro';
+  import Card from '../components/Card.astro';
 
-interface Producto {
-  id: string;
-  titulo: string;
-  descripcion: string;
-  precio: string;
-  linkImagen: string;
-  seccion: string;
-}
-
-let productosMac: Producto[] = [];
-
-// Cargar los productos desde el servidor
-try {
-  const response = await fetch('http://localhost:3000/productos');
-  if (response.ok) {
-    const productos: Producto[] = await response.json();
-    // Filtrar los productos que pertenecen a la sección "Mac"
-    productosMac = productos.filter((producto: Producto) => producto.seccion === 'Tv');
-  } else {
-    console.error('Error al cargar los productos');
+  interface Producto {
+    id: string;
+    titulo: string;
+    descripcion: string;
+    precio: string;
+    linkImagen: string;
+    seccion: string;
   }
-} catch (error) {
-  console.error('Error en la solicitud: ', error);
-}
+
+  let productosMac: Producto[] = [];
+
+  // Cargar los productos desde el servidor
+  try {
+    const response = await fetch('https://quasar-scientific-sidewalk.glitch.me/productos');
+    if (response.ok) {
+      const productos: Producto[] = await response.json();
+      // Filtrar los productos que pertenecen a la sección "Mac"
+      productosMac = productos.filter((producto: Producto) => producto.seccion === 'Accesorios');
+    } else {
+      console.error('Error al cargar los productos');
+      document.querySelector('body')?.insertAdjacentHTML('beforeend', '<p>Error al cargar los productos. Inténtalo de nuevo más tarde.</p>');
+    }
+  } catch (error) {
+    console.error('Error en la solicitud: ', error);
+    document.querySelector('body')?.insertAdjacentHTML('beforeend', '<p>Error en la solicitud. Inténtalo de nuevo más tarde.</p>');
+  }
 ---
 
 <Layout>
   <Navbar />
-  <Body title="TVyCasa">
-    <h2 class="tituloProducto">Apple TV 1</h2>
+  <Body title="Mac">
+    <h2 class="tituloProducto">Productos de Ipad</h2>
     <ul id="seccion-mac" class="link-card-container">
       {productosMac.map((producto) => (
         <Card
