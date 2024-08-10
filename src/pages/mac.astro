@@ -16,13 +16,9 @@
 
   let productosMac: Producto[] = [];
 
-  // Cargar los productos desde el servidor
+  async function cargarProductos() {
   try {
-    const response = await fetch('https://quasar-scientific-sidewalk.glitch.me/productos', {
-      headers: {
-        'Cache-Control': 'no-cache',
-      },
-    });
+    const response = await fetch('https://quasar-scientific-sidewalk.glitch.me/productos');
     if (response.ok) {
       const productos: Producto[] = await response.json();
       // Filtrar los productos que pertenecen a la sección "Mac"
@@ -35,6 +31,15 @@
     console.error('Error en la solicitud: ', error);
     document.querySelector('body')?.insertAdjacentHTML('beforeend', '<p>Error en la solicitud. Inténtalo de nuevo más tarde.</p>');
   }
+}
+
+// Llamar a cargarProductos inicialmente
+await cargarProductos();
+
+// Establecer un intervalo para actualizar los productos cada 1 minuto (60000 milisegundos)
+setInterval(async () => {
+  await cargarProductos();
+}, 60000);
 ---
 
 <Layout>
