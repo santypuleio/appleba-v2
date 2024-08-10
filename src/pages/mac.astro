@@ -18,9 +18,10 @@ let productosMac: Producto[] = [];
 
 async function cargarProductos() {
   try {
-    const response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?timestamp=${new Date().getTime()}`);
+    const response = await fetch('https://quasar-scientific-sidewalk.glitch.me/productos');
     if (response.ok) {
       const productos: Producto[] = await response.json();
+      // Filtrar los productos que pertenecen a la sección "Mac"
       productosMac = productos.filter((producto: Producto) => producto.seccion === 'Mac');
     } else {
       console.error('Error al cargar los productos');
@@ -32,6 +33,7 @@ async function cargarProductos() {
   }
 }
 
+// Componente de página principal
 await cargarProductos();
 setInterval(cargarProductos, 60000);
 ---
@@ -43,7 +45,6 @@ setInterval(cargarProductos, 60000);
     <ul id="seccion-mac" class="link-card-container">
       {productosMac.map((producto) => (
         <Card
-          client:load
           img={producto.linkImagen}
           title={producto.titulo}
           body={producto.descripcion}
@@ -72,29 +73,29 @@ setInterval(cargarProductos, 60000);
   .link-card-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: center; /* Centramos los elementos horizontalmente */
     gap: 1rem;
-    list-style: none;
-    padding: 0;
-    margin: 0 auto;
+    list-style: none; /* Eliminar los puntos del ul */
+    padding: 0; /* Eliminar padding del ul */
+    margin: 0 auto; /* Centramos el ul */
     width: 100%;
   }
 
   .link-card-container > * {
-    flex: 1 1 calc(25% - 1rem);
-    max-width: calc(25% - 1rem);
+    flex: 1 1 calc(25% - 1rem); /* Flexibilidad en el tamaño del card */
+    max-width: calc(25% - 1rem); /* Tamaño máximo del card */
   }
 
   @media (max-width: 768px) {
     .link-card-container > * {
-      flex: 1 1 calc(50% - 1rem);
+      flex: 1 1 calc(50% - 1rem); /* En pantallas pequeñas, 2 elementos por fila */
       max-width: calc(50% - 1rem);
     }
   }
 
   @media (max-width: 480px) {
     .link-card-container > * {
-      flex: 1 1 100%;
+      flex: 1 1 100%; /* En pantallas muy pequeñas, 1 elemento por fila */
       max-width: 100%;
     }
   }
