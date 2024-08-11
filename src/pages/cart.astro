@@ -4,18 +4,18 @@ import Footer from "../components/Footer.astro";
 ---
 
 <!DOCTYPE html>
-<html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrito</title>
+    
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const botonVaciarCarrito = document.querySelector("#carrito-acciones-vaciar");
             const contenedorCarritoProductos = document.querySelector("#carrito-productos");
             const totalElement = document.getElementById("total");
-
+    
             // Verificar que los elementos existen antes de interactuar con ellos
             if (botonVaciarCarrito && contenedorCarritoProductos && totalElement) {
+    
                 // Vaciar Carrito:
                 botonVaciarCarrito.addEventListener('click', () => {
                     let productosEnCarrito = JSON.parse(localStorage.getItem("productos-en-carrito") || "[]");
@@ -23,7 +23,7 @@ import Footer from "../components/Footer.astro";
                     localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
                     contenedorCarritoProductos.innerHTML = '';
                     console.log("Carrito Vaciado.");
-
+    
                     let sumadorPrecio = 0;
                     localStorage.setItem('sumadorPrecio', sumadorPrecio.toString());
                     totalElement.innerText = "$" + sumadorPrecio;
@@ -37,18 +37,18 @@ import Footer from "../components/Footer.astro";
                 } catch (error) {
                     console.error('Error al cargar los productos:', error);
                 }
-
+    
                 const productosEnCarrito = JSON.parse(localStorage.getItem("productos-en-carrito") || "[]");
                 console.log(productosEnCarrito);
-
+    
                 let sumadorPrecio = 0; // Inicializar el sumadorPrecio
-
+    
                 if (productosEnCarrito.length > 0) {
-                    productosEnCarrito.forEach((producto) => {
+                    productosEnCarrito.forEach((producto: { id: string, cantidad: number }) => {
                         const slug = producto.id;
                         let cantidad = producto.cantidad;
-                        const productoEncontrado = datosProductos.find((p) => p.id === slug);
-
+                        const productoEncontrado = datosProductos.find((p: { id: string }) => p.id === slug);
+    
                         if (productoEncontrado) {
                             console.log("Producto encontrado.", productoEncontrado);
                             const precioProducto = parseFloat(productoEncontrado.precio);
@@ -76,7 +76,7 @@ import Footer from "../components/Footer.astro";
                                         <div style="display: in-line"> 
                                             <p>Precio (x unidad): $ ${productoEncontrado.precio}</p>
                                             <p id="cant-producto-${slug}">Cantidad: ${cantidad}</p>
-                                            <div class="botones-cantidad" style="margin-left: 10px;">
+                                            <div class="botones-cantidad" style = "margin-left: 10px;">
                                                 <button class="aumentar-cantidad" data-slug="${slug}">+</button>
                                                 <button class="disminuir-cantidad" data-slug="${slug}">-</button>
                                             </div>
@@ -87,15 +87,15 @@ import Footer from "../components/Footer.astro";
                             `;
                             
                             contenedorCarritoProductos.append(div);
-
+    
                             localStorage.setItem('sumadorPrecio', sumadorPrecio.toString());
                             totalElement.innerText = "$" + sumadorPrecio;
-
+    
                             // Borrar un producto:
                             const botonEliminarProducto = div.querySelector(`.borrar-un-producto[data-slug="${slug}"]`);
                             if (botonEliminarProducto) {
                                 botonEliminarProducto.addEventListener('click', () => {
-                                    const index = productosEnCarrito.findIndex((p) => p.id === slug);
+                                    const index = productosEnCarrito.findIndex((p: { id: string, cantidad: number }) => p.id === slug);
                                     if (index !== -1) {
                                         productosEnCarrito.splice(index, 1);
                                         localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
@@ -106,11 +106,11 @@ import Footer from "../components/Footer.astro";
                                     }
                                 });
                             }
-
+    
                             // Sumar y restar cantidad con botones:
                             const botonAumentarCantidad = div.querySelector(`.aumentar-cantidad[data-slug="${slug}"]`);
                             const botonDisminuirCantidad = div.querySelector(`.disminuir-cantidad[data-slug="${slug}"]`);
-
+    
                             if (botonAumentarCantidad) {
                                 botonAumentarCantidad.addEventListener('click', () => {
                                     cantidad++;
@@ -122,7 +122,7 @@ import Footer from "../components/Footer.astro";
                                     if (precioTotalElemento) {
                                         precioTotalElemento.innerText = `Precio (total producto): $ ${precioProducto * cantidad}`;
                                     }                                    
-                                    const producto = productosEnCarrito.find((p) => p.id === slug);
+                                    const producto = productosEnCarrito.find((p: { id: string; cantidad: number }) => p.id === slug);
                                     if (producto) {
                                         producto.cantidad = cantidad;
                                     }
@@ -131,7 +131,7 @@ import Footer from "../components/Footer.astro";
                                     totalElement.innerText = "$" + sumadorPrecio;
                                 });
                             }
-
+    
                             if (botonDisminuirCantidad) {
                                 botonDisminuirCantidad.addEventListener('click', () => {
                                     if (cantidad > 1) {
@@ -145,7 +145,7 @@ import Footer from "../components/Footer.astro";
                                         if (precioTotalElemento) {
                                             precioTotalElemento.innerText = `Precio (total producto): $ ${precioProducto * cantidad}`;
                                         }                                        
-                                        productosEnCarrito.find((p) => p.id === slug)!.cantidad = cantidad;
+                                        productosEnCarrito.find((p: { id: string; cantidad: number }) => p.id === slug)!.cantidad = cantidad;
                                         sumadorPrecio -= precioProducto;
                                         localStorage.setItem('sumadorPrecio', sumadorPrecio.toString());
                                         totalElement.innerText = "$" + sumadorPrecio;
@@ -157,86 +157,45 @@ import Footer from "../components/Footer.astro";
                         }
                     });
                 }
-
-                // Carrito Boton Comprar ahora
+    
+                // Botón Comprar ahora
                 const buyNowButton = document.querySelector(".carrito-acciones-comprar");
-                buyNowButton.addEventListener('click', () => {
-                    let mensaje = "Hola, me gustaría comprar: \n";
-                    for (let i = 0; i < productosEnCarrito.length; i++) {
-                        mensaje += `Producto: ${productosEnCarrito[i].id}. Cantidad: ${productosEnCarrito[i].cantidad}\n`;
-                    }
-                    mensaje += `Precio Total: $${sumadorPrecio}`;
-                    console.log(mensaje);
-                    const url = `https://wa.me/+5491122334455?text=${encodeURIComponent(mensaje)}`;
-                    window.open(url, '_blank');
-                });
+                if (buyNowButton) {
+                    buyNowButton.addEventListener('click', () => {
+                        const productosEnCarrito = JSON.parse(localStorage.getItem("productos-en-carrito") || "[]");
+                        const mensaje = productosEnCarrito.map((producto: { id: string, cantidad: number }) => {
+                            const productoEncontrado = datosProductos.find((p: { id: string }) => p.id === producto.id);
+                            return productoEncontrado ? `${productoEncontrado.titulo} (x${producto.cantidad}): $${productoEncontrado.precio * producto.cantidad}` : '';
+                        }).join('\n');
+                        const total = localStorage.getItem('sumadorPrecio') || '0';
+                        const mensajeWhatsApp = `Hola, quisiera comprar los siguientes productos:\n\n${mensaje}\n\nTotal: $${total}`;
+                        const urlWhatsApp = `https://wa.me/?text=${encodeURIComponent(mensajeWhatsApp)}`;
+                        window.location.href = urlWhatsApp;
+                    });
+                }
+            } else {
+                console.error("Uno o más elementos no se encontraron en el DOM.");
             }
         });
     </script>
     <style>
-        .carrito-producto {
-            display: flex;
-            align-items: center;
-            background-color: #222;
-            color: white;
-            border-radius: 7px;
-            margin-bottom: 0.5rem;
-            overflow: hidden;
-            transition: background-color 0.3s;
-        }
-        .product-image {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-top-left-radius: 7px;
-            border-bottom-left-radius: 7px;
-        }
-        .product-details {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 1rem;
-            flex: 1;
-        }
-        .product-title {
-            text-decoration: none;
-            color: rgb(255, 255, 255);
-            margin: 0 0 0.5rem 0;
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
-        .product-body {
-            margin: 0;
-            color: white;
-            font-size: 1rem;
-        }
-        .botones-cantidad {
-            margin-left: 10px;
-        }
-        .borrar-un-producto {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-        }
-        .aumentar-cantidad, .disminuir-cantidad {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            margin: 0 5px;
-        }
+        /* Estilos CSS aquí */
     </style>
 </head>
 <body>
     <Navbar/>
-    <main>
-        <h1>Carrito</h1>
-        <ul id="carrito-productos"></ul>
-        <div id="total">Total: $0</div>
-        <button id="carrito-acciones-vaciar">Vaciar Carrito</button>
-        <button class="carrito-acciones-comprar">Comprar Ahora</button>
+    <main style="display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 1rem;">
+        <h1>Carrito de Compras</h1>
+        <section id="carrito-productos" style="width: 100%; max-width: 800px; margin-bottom: 1rem;">
+            <!-- Aquí se llenarán los productos del carrito -->
+        </section>
+        <section id="carrito-acciones" style="width: 100%; max-width: 800px; text-align: center;">
+            <button id="carrito-acciones-vaciar">Vaciar Carrito</button>
+            <div>
+                <p>Total: <span id="total">$0</span></p>
+            </div>
+            <button class="carrito-acciones-comprar">Comprar Ahora</button>
+        </section>
     </main>
     <Footer/>
 </body>
-</html>
