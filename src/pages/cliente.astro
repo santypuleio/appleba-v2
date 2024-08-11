@@ -128,27 +128,24 @@ import Body from '../components/Body.astro';
     const modificarButton = document.getElementById('modificar') as HTMLButtonElement;
     if (modificarButton) {
       modificarButton.addEventListener('click', async function() {
-        const idElement = document.getElementById('idModificar') as HTMLInputElement;
         const tituloElement = document.getElementById('tituloModificar') as HTMLInputElement;
         const precioElement = document.getElementById('precioModificar') as HTMLInputElement;
 
-        if (idElement && tituloElement && precioElement) {
-          const id = idElement.value;
+        if (tituloElement && precioElement) {
           const titulo = tituloElement.value;
           const nuevoPrecio = precioElement.value;
 
           try {
-            let response;
-            let productos;
+            // Primero, buscar el producto por título
+            let response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}`);
+            let productos = await response.json();
 
-            // Buscar el producto por ID
-            if (id) {
-              response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?id=${id}`);
-              productos = await response.json();
+            if (productos.length > 0) {
+              // Encontrar el producto con el título dado
+              const producto = productos.find((p: { titulo: string }) => p.titulo === titulo);
 
-              if (productos.length > 0) {
-                // Producto encontrado por ID
-                const producto = productos[0];
+              if (producto) {
+                // Actualizar el precio del producto
                 producto.precio = nuevoPrecio;
 
                 const updateResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${producto.id}`, {
@@ -160,46 +157,15 @@ import Body from '../components/Body.astro';
                 });
 
                 if (updateResponse.ok) {
-                  alert('Precio modificado correctamente por ID.');
-                  return;
+                  alert('Precio modificado correctamente.');
                 } else {
                   alert('Hubo un error al modificar el precio.');
-                  return;
-                }
-              }
-            }
-
-            // Si no se encuentra por ID o no se proporcionó ID, buscar por Título
-            if (titulo) {
-              response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}`);
-              productos = await response.json();
-
-              if (productos.length > 0) {
-                // Buscar coincidencia exacta por título
-                const producto = productos.find((p: { titulo: string }) => p.titulo === titulo);
-
-                if (producto) {
-                  producto.precio = nuevoPrecio;
-
-                  const updateResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${producto.id}`, {
-                    method: 'PUT',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(producto)
-                  });
-
-                  if (updateResponse.ok) {
-                    alert('Precio modificado correctamente por Título.');
-                  } else {
-                    alert('Hubo un error al modificar el precio.');
-                  }
-                } else {
-                  alert('No se encontró un producto con ese título exacto.');
                 }
               } else {
-                alert('No se encontró el producto ni por ID ni por Título.');
+                alert('No se encontró un producto con ese título.');
               }
+            } else {
+              alert('No se encontró el producto con ese título.');
             }
           } catch (error) {
             console.error('Error en la solicitud: ', error);
@@ -217,64 +183,34 @@ import Body from '../components/Body.astro';
     const eliminarButton = document.getElementById('eliminar') as HTMLButtonElement;
     if (eliminarButton) {
       eliminarButton.addEventListener('click', async function() {
-        const idElement = document.getElementById('idEliminar') as HTMLInputElement;
         const tituloElement = document.getElementById('tituloEliminar') as HTMLInputElement;
 
-        if (idElement && tituloElement) {
-          const id = idElement.value;
+        if (tituloElement) {
           const titulo = tituloElement.value;
 
           try {
-            let response;
-            let productos;
+            let response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}`);
+            let productos = await response.json();
 
-            // Buscar el producto por ID
-            if (id) {
-              response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?id=${id}`);
-              productos = await response.json();
+            if (productos.length > 0) {
+              // Buscar coincidencia exacta por título
+              const producto = productos.find((p: { titulo: string }) => p.titulo === titulo);
 
-              if (productos.length > 0) {
-                const producto = productos[0];
-
+              if (producto) {
                 const deleteResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${producto.id}`, {
                   method: 'DELETE',
                 });
 
                 if (deleteResponse.ok) {
-                  alert('Producto eliminado correctamente por ID.');
-                  return;
+                  alert('Producto eliminado correctamente.');
                 } else {
                   alert('Hubo un error al eliminar el producto.');
-                  return;
-                }
-              }
-            }
-
-            // Si no se encuentra por ID o no se proporcionó ID, buscar por Título
-            if (titulo) {
-              response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}`);
-              productos = await response.json();
-
-              if (productos.length > 0) {
-                // Buscar coincidencia exacta por título
-                const producto = productos.find((p: { titulo: string }) => p.titulo === titulo);
-
-                if (producto) {
-                  const deleteResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${producto.id}`, {
-                    method: 'DELETE',
-                  });
-
-                  if (deleteResponse.ok) {
-                    alert('Producto eliminado correctamente por Título.');
-                  } else {
-                    alert('Hubo un error al eliminar el producto.');
-                  }
-                } else {
-                  alert('No se encontró un producto con ese título exacto.');
                 }
               } else {
-                alert('No se encontró el producto ni por ID ni por Título.');
+                alert('No se encontró un producto con ese título.');
               }
+            } else {
+              alert('No se encontró el producto con ese título.');
             }
           } catch (error) {
             console.error('Error en la solicitud: ', error);
