@@ -45,7 +45,6 @@ setInterval(cargarProductos, 60000);
     <ul id="seccion-mac" class="link-card-container">
       {productosMac.map((producto) => (
         <Card
-          client:load
           img={producto.linkImagen}
           title={producto.titulo}
           body={producto.descripcion}
@@ -101,3 +100,4 @@ setInterval(cargarProductos, 60000);
     }
   }
 </style>
+
