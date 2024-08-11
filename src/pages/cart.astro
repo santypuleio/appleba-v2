@@ -170,7 +170,7 @@ import Footer from "../components/Footer.astro";
                         const total = localStorage.getItem('sumadorPrecio') || '0';
                         const mensajeWhatsApp = `Hola, quisiera comprar los siguientes productos:\n\n${mensaje}\n\nTotal: $${total}`;
                         const urlWhatsApp = `https://wa.me/+5491153481984?text=${encodeURIComponent(mensaje)}`;
-                        window.location.href = url;
+                        window.location.href = urlWhatsApp;
                     });
                 }
             } else {
