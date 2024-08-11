@@ -159,26 +159,22 @@ import Footer from "../components/Footer.astro";
                     });
                 }
     
-                // Botón Comprar ahora
+                //Carrito Boton Comprar ahora
+                let mensaje = "";
+        
                 const buyNowButton = document.querySelector(".carrito-acciones-comprar");
-                if (buyNowButton) {
-                    buyNowButton.addEventListener('click', () => {
-                        const productosEnCarrito = JSON.parse(localStorage.getItem("productos-en-carrito") || "[]");
-                        if (productosEnCarrito.length > 0) {
-                            // Implementar la funcionalidad para la compra aquí
-                            alert("¡Gracias por su compra!");
-                            localStorage.removeItem("productos-en-carrito");
-                            contenedorCarritoProductos.innerHTML = '';
-                            sumadorPrecio = 0;
-                            localStorage.setItem('sumadorPrecio', sumadorPrecio.toString());
-                            totalElement.innerText = "$" + sumadorPrecio;
-                        } else {
-                            alert("Tu carrito está vacío.");
-                        }
-                    });
+                buyNowButton.addEventListener('click', () => {
+                    let mensaje = "Hola, me gustaría comprar: \n";
+                    for(let i = 0; i < productosEnCarrito.length; i++){
+                        mensaje += "Producto: " + productosEnCarrito[i].id + ". Cantidad:  " + productosEnCarrito[i].cantidad + "\n";
+                    }
+                    mensaje += "Precio Total: $" + sumadorPrecio;
+                    console.log(mensaje);
+                    const url = `https://wa.me/+5491153481984?text=${encodeURIComponent(mensaje)}`;
+                    window.location.href = url;
                 }
             }
-        });
+        );
     </script>
 
     <title>Carrito</title>
