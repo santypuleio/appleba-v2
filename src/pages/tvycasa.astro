@@ -1,57 +1,77 @@
 ---
-  import Layout from '../layouts/Layout.astro';
-  import Navbar from '../components/Navbar.astro';
-  import Footer from '../components/Footer.astro';
-  import Body from '../components/Body.astro';
-  import Card from '../components/Card.astro';
-
-  interface Producto {
-    id: string;
-    titulo: string;
-    descripcion: string;
-    precio: string;
-    linkImagen: string;
-    seccion: string;
-  }
-
-  let productosMac: Producto[] = [];
-
-  // Cargar los productos desde el servidor
-  try {
-    const response = await fetch('https://quasar-scientific-sidewalk.glitch.me/productos');
-    if (response.ok) {
-      const productos: Producto[] = await response.json();
-      // Filtrar los productos que pertenecen a la sección "Mac"
-      productosMac = productos.filter((producto: Producto) => producto.seccion === 'Accesorios');
-    } else {
-      console.error('Error al cargar los productos');
-      document.querySelector('body')?.insertAdjacentHTML('beforeend', '<p>Error al cargar los productos. Inténtalo de nuevo más tarde.</p>');
-    }
-  } catch (error) {
-    console.error('Error en la solicitud: ', error);
-    document.querySelector('body')?.insertAdjacentHTML('beforeend', '<p>Error en la solicitud. Inténtalo de nuevo más tarde.</p>');
-  }
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import Body from '../components/Body.astro';
 ---
 
 <Layout>
   <Navbar />
   <Body title="Mac">
-    <h2 class="tituloProducto">Productos de Ipad</h2>
+    <h2 class="tituloProducto">Accesorios</h2>
     <ul id="seccion-mac" class="link-card-container">
-      {productosMac.map((producto) => (
-        <Card
-          img={producto.linkImagen}
-          title={producto.titulo}
-          body={producto.descripcion}
-          href={`/product/${producto.id}`}
-          slug={producto.id}
-          precio={producto.precio}
-        />
-      ))}
+      <!-- Las cards se generarán dinámicamente aquí -->
     </ul>
   </Body>
   <Footer />
 </Layout>
+
+<script>
+  async function cargarProductos() {
+    try {
+      const response = await fetch('https://quasar-scientific-sidewalk.glitch.me/productos', { cache: 'no-store' });
+      if (response.ok) {
+        const productos = await response.json();
+        const productosMac = productos.filter((producto: any) => producto.seccion === 'Accesorios');
+        
+        const container = document.getElementById("seccion-mac");
+        if (container) {
+          container.innerHTML = '';
+
+          productosMac.forEach((producto:any) => {
+            const card = document.createElement("li");
+            card.style.cssText = `
+              background-color: #444;
+              color: #fff;
+              border-radius: 8px;
+              overflow: hidden;
+              box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+              transition: transform 0.3s ease-in-out;
+              flex: 1 1 calc(25% - 1rem);
+              max-width: calc(25% - 1rem);
+              list-style: none;
+              margin: 0;
+              padding: 0;
+            `;
+            card.onmouseover = () => { card.style.transform = "translateY(-5px)"; };
+            card.onmouseout = () => { card.style.transform = "translateY(0)"; };
+
+            card.innerHTML = `
+              <img src="${producto.linkImagen}" alt="${producto.titulo}" style="width: 100%; height: 150px; object-fit: cover;"/>
+              <div style="padding: 1rem;">
+                <h3 style="margin: 0 0 0.5rem; font-size: 1.25rem; color: #fff; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">${producto.titulo}</h3>
+                <p style="margin: 0.5rem 0; font-size: 1rem; color: #ddd; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">${producto.descripcion}</p>
+                <p style="color: #2ecc71; font-weight: bold; font-size: 1.2rem; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">$${producto.precio}</p>
+                <a href="/product/${producto.id}" style="color: #1e90ff; text-decoration: none; display: inline-block; margin-top: 1rem; font-size: 1rem; font-weight: bold; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">Ver más</a>
+              </div>
+            `;
+            
+            container.appendChild(card);
+          });
+        }
+      } else {
+        console.error('Error al cargar los productos');
+        document.querySelector('body')?.insertAdjacentHTML('beforeend', '<p>Error al cargar los productos. Inténtalo de nuevo más tarde.</p>');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud: ', error);
+      document.querySelector('body')?.insertAdjacentHTML('beforeend', '<p>Error en la solicitud. Inténtalo de nuevo más tarde.</p>');
+    }
+  }
+
+  cargarProductos();
+  setInterval(cargarProductos, 60000);
+</script>
 
 <style>
   body {
@@ -68,30 +88,67 @@
   .link-card-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* Centramos los elementos horizontalmente */
+    justify-content: center;
     gap: 1rem;
-    list-style: none; /* Eliminar los puntos del ul */
-    padding: 0; /* Eliminar padding del ul */
-    margin: 0 auto; /* Centramos el ul */
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
     width: 100%;
   }
 
   .link-card-container > * {
-    flex: 1 1 calc(25% - 1rem); /* Flexibilidad en el tamaño del card */
-    max-width: calc(25% - 1rem); /* Tamaño máximo del card */
+    flex: 1 1 calc(25% - 1rem);
+    max-width: calc(25% - 1rem);
   }
 
   @media (max-width: 768px) {
     .link-card-container > * {
-      flex: 1 1 calc(50% - 1rem); /* En pantallas pequeñas, 2 elementos por fila */
+      flex: 1 1 calc(50% - 1rem);
       max-width: calc(50% - 1rem);
     }
   }
 
   @media (max-width: 480px) {
     .link-card-container > * {
-      flex: 1 1 100%; /* En pantallas muy pequeñas, 1 elemento por fila */
+      flex: 1 1 100%;
       max-width: 100%;
     }
+  }
+
+  .card {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .card-body h3 {
+    margin: 0 0 0.5rem;
+  }
+
+  .precio {
+    color: #2ecc71;
+    font-weight: bold;
+  }
+
+  .card-link {
+    color: #3498db;
+    text-decoration: none;
+    display: block;
+    margin-top: 1rem;
+  }
+
+  .card-link:hover {
+    text-decoration: underline;
   }
 </style>
