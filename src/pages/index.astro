@@ -94,9 +94,36 @@
     display: flex;
   }
 
-  @media (max-width: 768px){
-  .servicios {
-    flex-direction: column; /* Cambia la dirección a columna en pantallas pequeñas */
-  }
+  @media (max-width: 768px) {
+    .servicios {
+      flex-direction: column; /* Cambia la dirección a columna en pantallas pequeñas */
+      align-items: center;    /* Centra horizontalmente los elementos */
+      justify-content: center; /* Centra verticalmente los elementos */
+      width. 100%;
+    }
+  
+    .info {
+      text-align: center; /* Centra el texto horizontalmente */
+      white-space: nowrap; /* Evita que el texto se divida en múltiples líneas */
+      overflow: hidden; /* Oculta cualquier contenido que se desborde */
+      text-overflow: ellipsis; /* Muestra puntos suspensivos (...) si el texto es demasiado largo */
+      width: 10rem; /* Asegura que ocupe el ancho disponible */
+    }
+    .servicios p {
+      text-align: center; /* Centra el texto horizontalmente */
+      margin-top: 0.5rem; /* Espacio superior */
+      margin-bottom: 1rem; /* Espacio inferior */
+      padding: 0.5rem; /* Espacio a los lados - aumenta el espacio a los lados para permitir más ancho */
+      font-size: 1rem; /* Tamaño de fuente - ajusta según tu preferencia */
+      line-height: 1.5; /* Altura de línea - aumenta la altura de línea para mejorar la legibilidad */
+      width: 9rem;
+    }
+    .lista-pago{
+      width: 17rem;
+    }
+   
+    body {
+      margin-top: 6.5rem; /* Ajusta el margen superior del cuerpo */
+    }
   }
 </style>
