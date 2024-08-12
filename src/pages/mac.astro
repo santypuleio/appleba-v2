@@ -47,7 +47,7 @@ import Body from '../components/Body.astro';
           card.onmouseout = () => { card.style.transform = "translateY(0)"; };
 
           // Aplicar estilos para dispositivos móviles
-          if (window.innerWidth <= 1900) {
+          if (window.innerWidth <= 768) {
             card.style.flex = "1 1 100%"; // Ocupa todo el ancho disponible en móviles
             card.style.maxWidth = "50%"; // Asegura que no haya límites en el ancho
             card.style.marginBottom = "1rem"; // Agrega un margen inferior para separarlas
