@@ -161,7 +161,43 @@ import Body from '../../components/Body.astro';
     margin: 0 auto;
     padding: 2rem;
   }
+
+  .product-container > div {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .product-image {
+    flex: 1;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .product-info-container {
+    flex: 2;
+    margin-left: 1rem;
+  }
+
+  /* Estilos para hacer la tarjeta responsive */
+  @media (max-width: 768px) {
+    .product-container > div {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .product-image {
+      max-width: 100%;
+      margin: 0;
+    }
+
+    .product-info-container {
+      margin-left: 0;
+      text-align: center;
+    }
+  }
+
   body {
     background-color: #333;
   }
 </style>
+
