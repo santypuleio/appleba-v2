@@ -121,5 +121,57 @@
         height: 1.5rem;
         stroke: #fff; /* Ajusta el color del ícono */
     }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column; /* Cambia la dirección a columna en pantallas pequeñas */
+        padding: 0.5rem; /* Reducir el padding para pantallas más pequeñas */
+        align-items: center; /* Centra los elementos horizontalmente */
+        position: fixed; /* Hace que el navbar sea fijo */
+        top: 0; /* Lo posiciona en la parte superior de la ventana */
+        left: 0;
+        width: 100%;
+        background-color: #222; /* Agrega un fondo al navbar */
+        z-index: 1000; /* Asegura que esté por encima de otros contenidos */
+      }
+    
+      .navbar-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.1rem; /* Añade margen inferior para separar del contenido principal */
+      }
+    
+      .navbar-right {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1rem; /* Añade margen superior para separar del contenido principal */
+      }
+    
+      .navbar-nav {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center; /* Centra horizontalmente los elementos del menú */
+      }
+    
+      .nav-item {
+        margin: 0 0.5rem; /* Ajusta el espacio entre elementos */
+      }
+    
+      .nav-link {
+        font-size: 0.9rem; /* Reducir el tamaño de fuente para pantallas más pequeñas */
+        text-align: center; /* Centra el texto horizontalmente */
+        color: #fff; /* Asegura que los enlaces tengan color blanco */
+        text-decoration: none; /* Elimina el subrayado de los enlaces */
+        padding: 0.5rem; /* Añade un poco de espacio interno a los enlaces */
+      }
+    
+      .navbar-brand {
+        margin-bottom: 1rem; /* Añade margen inferior para separar del contenido principal */
+      }
 </style>
   
