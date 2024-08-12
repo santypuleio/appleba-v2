@@ -25,7 +25,7 @@ import Body from '../../components/Body.astro';
 
       if (response.ok) {
         const productos = await response.json();
-        const product = productos.find((producto: any) => producto.id === productId);
+        const product = productos.find((producto) => producto.id === productId);
 
         if (product) {
           const container = document.getElementById("product-container");
@@ -91,113 +91,96 @@ import Body from '../../components/Body.astro';
                       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                       <path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
                       <path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                      <path d="M5 17h-2v-11a1 1 0 0 1 1 -1h9v12m-4 0h6m4 0h2v-6h-8m0 -1v-2m0 -1v-3h-6v7h-3a1 1 0 0 0 -1 1v4" />
+                      <path d="M5 17h-2v-11a1 1 0 0 1 1 -1h9v12m-4 0h6m4 0h2v-6h-8m0 -1v-2m0 -1v-3h10v5h-1" />
                     </svg>
-                    <p style="color: white;">Envío a domicilio</p>
+                    <p class="product-description" style="color: white;">Envío a domicilio</p>
                   </div>
                   <div class="retiro2" style="display: flex; align-items: center;">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-store" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem;">
                       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                      <path d="M3 8l0 13h18v-13l-9 -4z" />
-                      <path d="M6 21l0 -10h12v10" />
-                      <path d="M12 12l0 -4" />
+                      <path d="M8 13h-5v-8h2m3 0h10v5m-5 7v-4m4 4v-4m-4 4h8v-1a3 3 0 0 0 -3 -3m-5 0h-2v4" />
+                      <path d="M6 21v-3m0 -4v-5a2 2 0 0 0 -2 -2h14a2 2 0 0 0 -2 2v5" />
                     </svg>
-                    <p style="color: white;">Retiro en tienda</p>
+                    <p class="product-description" style="color: white;">Retiro en tienda</p>
                   </div>
                 </div>
 
-                <button id="add-to-cart" style="margin-top: 2rem; padding: 0.8rem 1.6rem; background-color: #2ecc71; border: none; border-radius: 4px; color: white; font-size: 1.2rem; cursor: pointer;">Agregar al carrito</button>
+                <button class="add-to-cart-button" style="
+                  display: block;
+                  width: 100%;
+                  padding: 0.8rem;
+                  background-color: #2ecc71;
+                  border: none;
+                  border-radius: 4px;
+                  color: white;
+                  font-size: 1.2rem;
+                  font-weight: bold;
+                  cursor: pointer;
+                  margin-top: 1.5rem;
+                  text-align: center;
+                ">
+                  Agregar al carrito
+                </button>
               </div>
             `;
 
             container.appendChild(pagProduct);
-
-            // Agregar funcionalidad al botón "Agregar al carrito"
-            const button = document.getElementById('add-to-cart');
-            if (button) {
-              button.addEventListener('click', () => {
-                const storedCart = localStorage.getItem('productos-en-carrito');
-                let productosEnCarrito = storedCart ? JSON.parse(storedCart) : [];
-
-                let productoEnCarrito = productosEnCarrito.find((producto:any) => producto.id === productId);
-
-                if (productoEnCarrito) {
-                  productoEnCarrito.cantidad++;
-                  console.log(`Ya está en el carrito.`);
-                } else {
-                  productoEnCarrito = {
-                    id: productId,
-                    cantidad: 1
-                  };
-                  productosEnCarrito.push(productoEnCarrito);
-                  console.log(`Se agregó el producto ${productId} al carrito.`);
-                }
-
-                // Guardar el carrito actualizado en localStorage
-                localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
-                console.log(productosEnCarrito);
-                alert("El producto fue agregado al carrito");
-              });
-            } else {
-              console.error('El botón de agregar al carrito no se encontró en el DOM.');
-            }
+          } else {
+            console.error('Contenedor no encontrado');
           }
         } else {
-          console.log('Producto no encontrado.');
+          console.error('Producto no encontrado');
         }
       } else {
-        console.log('Error al obtener los productos.');
+        console.error('Error al obtener los productos');
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error en la solicitud:', error);
     }
   });
 </script>
 
-
 <style>
   .product-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
+    padding: 1rem;
   }
-
-  .product-container > div {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .product-image {
-    flex: 1;
-    max-width: 100%;
-    height: auto;
-  }
-
   .product-info-container {
-    flex: 2;
     margin-left: 1rem;
+    flex: 1;
   }
-
-  /* Estilos para hacer la tarjeta responsive */
-  @media (max-width: 768px) {
-    .product-container > div {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .product-image {
-      max-width: 100%;
-      margin: 0;
-    }
-
-    .product-info-container {
-      margin-left: 0;
-      text-align: center;
-    }
+  .product-title {
+    margin: 0;
+    font-size: 1.8rem;
+    color: white;
   }
-
-  body {
-    background-color: #333;
+  .product-price {
+    font-size: 2rem;
+    color: #2ecc71;
+    font-weight: bold;
+  }
+  .medios-pago svg {
+    margin-right: 0.5rem;
+  }
+  .retiro {
+    margin-top: 2rem;
+  }
+  .retiro1, .retiro2 {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  .add-to-cart-button {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #2ecc71;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    text-align: center;
   }
 </style>
-
