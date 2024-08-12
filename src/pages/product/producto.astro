@@ -37,7 +37,6 @@ import Body from '../../components/Body.astro';
             // CSS dentro de style.cssText para la tarjeta del producto
             pagProduct.style.cssText = `
               display: flex;
-              flex-direction: row;
               align-items: flex-start;
               width: 80%;
               margin: 2rem auto;
@@ -50,7 +49,7 @@ import Body from '../../components/Body.astro';
             `;
 
             pagProduct.innerHTML = `
-              <img src="${product.linkImagen}" alt="${product.titulo}" class="product-image" style="width: 100%; height: auto; margin-bottom: 1rem;"/>
+              <img src="${product.linkImagen}" alt="${product.titulo}" class="product-image" style="width: 40%; height: auto; margin-right: 2rem;"/>
 
               <div class="product-info-container" style="flex: 1;">
                 <h3 class="product-title" style="color: white; font-weight: bold; margin-top: 0; overflow: hidden; font-size: 1.8rem;">${product.titulo}</h3>
@@ -99,31 +98,61 @@ import Body from '../../components/Body.astro';
                   <div class="retiro2" style="display: flex; align-items: center;">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-store" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem;">
                       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                      <path d="M4 8h16v12h-16z" />
-                      <path d="M5 8v-3h14v3" />
-                      <path d="M3 21h18" />
-                      <path d="M10 21v-11" />
+                      <path d="M3 8l0 13h18v-13l-9 -4z" />
+                      <path d="M6 21l0 -10h12v10" />
+                      <path d="M12 12l0 -4" />
                     </svg>
                     <p style="color: white;">Retiro en tienda</p>
                   </div>
                 </div>
+
+                <button id="add-to-cart" style="margin-top: 2rem; padding: 0.8rem 1.6rem; background-color: #2ecc71; border: none; border-radius: 4px; color: white; font-size: 1.2rem; cursor: pointer;">Agregar al carrito</button>
               </div>
             `;
 
             container.appendChild(pagProduct);
+
+            // Agregar funcionalidad al botón "Agregar al carrito"
+            const button = document.getElementById('add-to-cart');
+            if (button) {
+              button.addEventListener('click', () => {
+                const storedCart = localStorage.getItem('productos-en-carrito');
+                let productosEnCarrito = storedCart ? JSON.parse(storedCart) : [];
+
+                let productoEnCarrito = productosEnCarrito.find((producto:any) => producto.id === productId);
+
+                if (productoEnCarrito) {
+                  productoEnCarrito.cantidad++;
+                  console.log(`Ya está en el carrito.`);
+                } else {
+                  productoEnCarrito = {
+                    id: productId,
+                    cantidad: 1
+                  };
+                  productosEnCarrito.push(productoEnCarrito);
+                  console.log(`Se agregó el producto ${productId} al carrito.`);
+                }
+
+                // Guardar el carrito actualizado en localStorage
+                localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
+                console.log(productosEnCarrito);
+                alert("El producto fue agregado al carrito");
+              });
+            } else {
+              console.error('El botón de agregar al carrito no se encontró en el DOM.');
+            }
           }
         } else {
-          console.error('Producto no encontrado');
+          console.log('Producto no encontrado.');
         }
       } else {
-        console.error('Error al obtener los productos');
+        console.log('Error al obtener los productos.');
       }
     } catch (error) {
-      console.error('Error en la solicitud:', error);
+      console.error('Error:', error);
     }
   });
 </script>
-
 
 
 <style>
