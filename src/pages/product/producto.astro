@@ -1,0 +1,167 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import Body from '../../components/Body.astro';
+---
+
+<Layout>
+  <Navbar />
+  <Body>
+    <div id="product-container" class="product-container"></div>
+  </Body>
+  <Footer />
+</Layout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const productId = queryParams.get('id');
+
+    console.log('Product ID from URL:', productId);
+
+    try {
+      const response = await fetch('https://quasar-scientific-sidewalk.glitch.me/productos', { cache: 'no-store' });
+
+      if (response.ok) {
+        const productos = await response.json();
+        const product = productos.find((producto: any) => producto.id === productId);
+
+        if (product) {
+          const container = document.getElementById("product-container");
+          if (container) {
+            container.innerHTML = '';
+
+            const pagProduct = document.createElement("div");
+
+            // CSS dentro de style.cssText para la tarjeta del producto
+            pagProduct.style.cssText = `
+              display: flex;
+              align-items: flex-start;
+              width: 80%;
+              margin: 2rem auto;
+              padding: 2rem;
+              background-color: #333;
+              color: #fff;
+              font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+              border: 1px solid #555;
+              border-radius: 8px;
+            `;
+
+            pagProduct.innerHTML = `
+              <img src="${product.linkImagen}" alt="${product.titulo}" class="product-image" style="width: 40%; height: auto; margin-right: 2rem;"/>
+
+              <div class="product-info-container" style="flex: 1;">
+                <h3 class="product-title" style="color: white; font-weight: bold; margin-top: 0; overflow: hidden; font-size: 1.8rem;">${product.titulo}</h3>
+                <p class="product-price" style="color: #2ecc71; font-weight: bold; font-size: 2rem;">$${product.precio}</p>
+                
+                <div class="medios-pago" style="margin-top: 2rem;">
+                  <p class="product-description" style="color: white; margin-bottom: 0.5rem;">Medios de pago</p>
+                  <!-- SVGs de Medios de Pago -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-building-bank" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem;">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M3 21l18 0" />
+                    <path d="M3 10l18 0" />
+                    <path d="M5 6l7 -3l7 3" />
+                    <path d="M4 10l0 11" />
+                    <path d="M20 10l0 11" />
+                    <path d="M8 14l0 3" />
+                    <path d="M12 14l0 3" />
+                    <path d="M16 14l0 3" />
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-cashapp" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem;">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M17.1 8.648a.568 .568 0 0 1 -.761 .011a5.682 5.682 0 0 0 -3.659 -1.34c-1.102 0 -2.205 .363 -2.205 1.374c0 1.023 1.182 1.364 2.546 1.875c2.386 .796 4.363 1.796 4.363 4.137c0 2.545 -1.977 4.295 -5.204 4.488l-.295 1.364a.557 .557 0 0 1 -.546 .443h-2.034l-.102 -.011a.568 .568 0 0 1 -.432 -.67l.318 -1.444a7.432 7.432 0 0 1 -3.273 -1.784v-.011a.545 .545 0 0 1 0 -.773l1.137 -1.102c.214 -.2 .547 -.2 .761 0a5.495 5.495 0 0 0 3.852 1.5c1.478 0 2.466 -.625 2.466 -1.614c0 -.989 -1 -1.25 -2.886 -1.954c-2 -.716 -3.898 -1.728 -3.898 -4.091c0 -2.75 2.284 -4.091 4.989 -4.216l.284 -1.398a.545 .545 0 0 1 .545 -.432h2.023l.114 .012a.544 .544 0 0 1 .42 .647l-.307 1.557a8.528 8.528 0 0 1 2.818 1.58l.023 .022c.216 .228 .216 .569 0 .773l-1.057 1.057z" />
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-coin-bitcoin" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                    <path d="M9 8h4.09c1.055 0 1.91 .895 1.91 2s-.855 2 -1.91 2c1.055 0 1.91 .895 1.91 2s-.855 2 -1.91 2h-4.09" />
+                    <path d="M10 12h4" />
+                    <path d="M10 7v10v-9" />
+                    <path d="M13 7v1" />
+                    <path d="M13 16v1" />
+                  </svg>
+                </div>
+
+                <div class="retiro" style="margin-top: 2rem;">
+                  <p class="product-description" style="color: white; margin-bottom: 0.5rem;">Formas de retiro</p>
+                  <div class="retiro1" style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-truck" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem;">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                      <path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                      <path d="M5 17h-2v-11a1 1 0 0 1 1 -1h9v12m-4 0h6m4 0h2v-6h-8m0 -1v-2m0 -1v-3h-6v7h-3a1 1 0 0 0 -1 1v4" />
+                    </svg>
+                    <p style="color: white;">Envío a domicilio</p>
+                  </div>
+                  <div class="retiro2" style="display: flex; align-items: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-store" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem;">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M3 8l0 13h18v-13l-9 -4z" />
+                      <path d="M6 21l0 -10h12v10" />
+                      <path d="M12 12l0 -4" />
+                    </svg>
+                    <p style="color: white;">Retiro en tienda</p>
+                  </div>
+                </div>
+
+                <button id="add-to-cart" style="margin-top: 2rem; padding: 0.8rem 1.6rem; background-color: #2ecc71; border: none; border-radius: 4px; color: white; font-size: 1.2rem; cursor: pointer;">Agregar al carrito</button>
+              </div>
+            `;
+
+            container.appendChild(pagProduct);
+
+            // Agregar funcionalidad al botón "Agregar al carrito"
+            const button = document.getElementById('add-to-cart');
+            if (button) {
+              button.addEventListener('click', () => {
+                const storedCart = localStorage.getItem('productos-en-carrito');
+                let productosEnCarrito = storedCart ? JSON.parse(storedCart) : [];
+
+                let productoEnCarrito = productosEnCarrito.find((producto:any) => producto.id === productId);
+
+                if (productoEnCarrito) {
+                  productoEnCarrito.cantidad++;
+                  console.log(`Ya está en el carrito.`);
+                } else {
+                  productoEnCarrito = {
+                    id: productId,
+                    cantidad: 1
+                  };
+                  productosEnCarrito.push(productoEnCarrito);
+                  console.log(`Se agregó el producto ${productId} al carrito.`);
+                }
+
+                // Guardar el carrito actualizado en localStorage
+                localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
+                console.log(productosEnCarrito);
+                alert("El producto fue agregado al carrito");
+              });
+            } else {
+              console.error('El botón de agregar al carrito no se encontró en el DOM.');
+            }
+          }
+        } else {
+          console.log('Producto no encontrado.');
+        }
+      } else {
+        console.log('Error al obtener los productos.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  });
+</script>
+
+
+<style>
+  .product-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  body {
+    background-color: #333;
+  }
+</style>
