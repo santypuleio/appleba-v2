@@ -72,7 +72,6 @@ import Footer from "../components/Footer.astro";
                                                 </svg>
                                             </button>
                                         </div>
-                                        <p style="margin: 0;color: white;font-size: 1rem;" class="product-body">${productoEncontrado.descripcion}</p>
                                         <div style="display: in-line"> 
                                             <p>Precio (x unidad): $ ${productoEncontrado.precio}</p>
                                             <p id="cant-producto-${slug}">Cantidad: ${cantidad}</p>
@@ -169,7 +168,7 @@ import Footer from "../components/Footer.astro";
                         }).join('\n');
                         const total = localStorage.getItem('sumadorPrecio') || '0';
                         const mensajeWhatsApp = `Hola, quisiera comprar los siguientes productos:\n\n${mensaje}\n\nTotal: $${total}`;
-                        const urlWhatsApp = `https://wa.me/+5491153481984?text=${encodeURIComponent(mensaje)}`;
+                        const urlWhatsApp = `https://wa.me/+5491153481984?text=${encodeURIComponent(mensajeWhatsApp)}`;
                         window.location.href = urlWhatsApp;
                     });
                 }
