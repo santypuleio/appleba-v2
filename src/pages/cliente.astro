@@ -44,9 +44,8 @@ import Body from '../components/Body.astro';
       <h2 class="tituloProducto">Modificar Precio Producto:</h2>
       <div class="form-container">
         <form id="modificarForm">
-          
-          <label for="tituloModificar">Titulo:</label>
-          <input type="text" id="tituloModificar" name="titulo" required>
+          <label for="idModificar">ID:</label>
+          <input type="text" id="idModificar" name="id" required>
           
           <label for="precioModificar">Precio:</label>
           <input type="number" id="precioModificar" name="precio" required>
@@ -58,12 +57,8 @@ import Body from '../components/Body.astro';
       <h2 class="tituloProducto">Eliminar producto:</h2>
       <div class="form-container">
         <form id="eliminarForm">
-          
           <label for="idEliminar">ID:</label>
-          <input type="text" id="idEliminar" name="id">
-          
-          <label for="tituloEliminar">Titulo:</label>
-          <input type="text" id="tituloEliminar" name="titulo">
+          <input type="text" id="idEliminar" name="id" required>
           
           <button id="eliminar" type="button">Eliminar</button>
         </form>
@@ -131,44 +126,37 @@ import Body from '../components/Body.astro';
     const modificarButton = document.getElementById('modificar') as HTMLButtonElement;
     if (modificarButton) {
       modificarButton.addEventListener('click', async function() {
-        const tituloElement = document.getElementById('tituloModificar') as HTMLInputElement;
+        const idElement = document.getElementById('idModificar') as HTMLInputElement;
         const precioElement = document.getElementById('precioModificar') as HTMLInputElement;
 
-        if (tituloElement && precioElement) {
-          const titulo = tituloElement.value;
+        if (idElement && precioElement) {
+          const id = idElement.value;
           const nuevoPrecio = precioElement.value;
 
           try {
-            // Primero, buscar el producto por título
-            let response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}`);
-            let productos = await response.json();
+            // Buscar el producto por ID
+            const response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${id}`);
+            const producto = await response.json();
 
-            if (productos.length > 0) {
-              // Encontrar el producto con el título dado
-              const producto = productos.find((p: { titulo: string }) => p.titulo === titulo);
+            if (producto) {
+              // Actualizar el precio del producto
+              producto.precio = nuevoPrecio;
 
-              if (producto) {
-                // Actualizar el precio del producto
-                producto.precio = nuevoPrecio;
+              const updateResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${id}`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(producto)
+              });
 
-                const updateResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${producto.id}`, {
-                  method: 'PUT',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify(producto)
-                });
-
-                if (updateResponse.ok) {
-                  alert('Precio modificado correctamente.');
-                } else {
-                  alert('Hubo un error al modificar el precio.');
-                }
+              if (updateResponse.ok) {
+                alert('Precio modificado correctamente.');
               } else {
-                alert('No se encontró un producto con ese título.');
+                alert('Hubo un error al modificar el precio.');
               }
             } else {
-              alert('No se encontró el producto con ese título.');
+              alert('No se encontró un producto con ese ID.');
             }
           } catch (error) {
             console.error('Error en la solicitud: ', error);
@@ -186,36 +174,34 @@ import Body from '../components/Body.astro';
     const eliminarButton = document.getElementById('eliminar') as HTMLButtonElement;
     if (eliminarButton) {
       eliminarButton.addEventListener('click', async function() {
-        const tituloElement = document.getElementById('tituloEliminar') as HTMLInputElement;
         const idElement = document.getElementById('idEliminar') as HTMLInputElement;
 
-        let id = idElement ? idElement.value : null;
-        const titulo = tituloElement ? tituloElement.value : null;
+        if (idElement) {
+          const id = idElement.value;
 
-        if (id || titulo) {
           try {
-            let response;
-            if (id) {
-              response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${id}`, {
-                method: 'DELETE',
-              });
-            } else if (titulo) {
-              response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}`, {
-                method: 'DELETE',
-              });
-            }
+            const response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${id}`);
+            const producto = await response.json();
 
-            if (response && response.ok) {
-              alert('Producto eliminado correctamente.');
+            if (producto) {
+              const deleteResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${id}`, {
+                method: 'DELETE',
+              });
+
+              if (deleteResponse.ok) {
+                alert('Producto eliminado correctamente.');
+              } else {
+                alert('Hubo un error al eliminar el producto.');
+              }
             } else {
-              alert('Hubo un error al eliminar el producto.');
+              alert('No se encontró un producto con ese ID.');
             }
           } catch (error) {
             console.error('Error en la solicitud: ', error);
             alert('Hubo un error al eliminar el producto.');
           }
         } else {
-          console.error('Debe proporcionar un ID o un título para eliminar el producto.');
+          console.error('No se pudo encontrar uno o más elementos del formulario.');
         }
       });
     } else {
@@ -256,10 +242,10 @@ import Body from '../components/Body.astro';
     background-color: #fff;
     padding: 5rem;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    max-width: 600px; /* Más ancho */
     width: 100%;
-    max-width: 500px;
-    color: #333;
+    transition: max-width 0.3s ease;
   }
 
   form {
@@ -268,38 +254,40 @@ import Body from '../components/Body.astro';
   }
 
   label {
-    margin-bottom: 0.5rem;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
   }
 
-  input, textarea, select {
-    margin-bottom: 1rem;
-    padding: 0.5rem;
+  input[type="text"],
+  input[type="url"],
+  input[type="number"],
+  textarea,
+  select {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    border: 1px solid #ddd;
+    font-size: 16px;
+    color: #333;
   }
 
   button {
-    background-color: #007bff;
+    background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
     cursor: pointer;
-    font-size: 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
   }
 
   button:hover {
-    background-color: #0056b3;
-  }
-
-  button:disabled {
-    background-color: #d6d6d6;
-    cursor: not-allowed;
-  }
-
-  input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+    background-color: #45a049;
   }
 </style>
