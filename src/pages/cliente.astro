@@ -62,6 +62,9 @@ import Body from '../components/Body.astro';
           <label for="idEliminar">ID:</label>
           <input type="text" id="idEliminar" name="id">
           
+          <label for="tituloEliminar">Titulo:</label>
+          <input type="text" id="tituloEliminar" name="titulo">
+          
           <button id="eliminar" type="button">Eliminar</button>
         </form>
       </div>
@@ -137,7 +140,7 @@ import Body from '../components/Body.astro';
 
           try {
             // Primero, buscar el producto por título
-            let response = await fetch(https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)});
+            let response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}`);
             let productos = await response.json();
 
             if (productos.length > 0) {
@@ -148,7 +151,7 @@ import Body from '../components/Body.astro';
                 // Actualizar el precio del producto
                 producto.precio = nuevoPrecio;
 
-                const updateResponse = await fetch(https://quasar-scientific-sidewalk.glitch.me/productos/${producto.id}, {
+                const updateResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${producto.id}`, {
                   method: 'PUT',
                   headers: {
                     'Content-Type': 'application/json'
@@ -193,11 +196,11 @@ import Body from '../components/Body.astro';
           try {
             let response;
             if (id) {
-              response = await fetch(https://quasar-scientific-sidewalk.glitch.me/productos/${id}, {
+              response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${id}`, {
                 method: 'DELETE',
               });
             } else if (titulo) {
-              response = await fetch(https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}, {
+              response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}`, {
                 method: 'DELETE',
               });
             }
