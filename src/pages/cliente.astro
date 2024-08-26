@@ -44,8 +44,9 @@ import Body from '../components/Body.astro';
       <h2 class="tituloProducto">Modificar Precio Producto:</h2>
       <div class="form-container">
         <form id="modificarForm">
-          <label for="idModificar">ID:</label>
-          <input type="text" id="idModificar" name="id" required>
+          
+          <label for="tituloModificar">Titulo:</label>
+          <input type="text" id="tituloModificar" name="titulo" required>
           
           <label for="precioModificar">Precio:</label>
           <input type="number" id="precioModificar" name="precio" required>
@@ -121,56 +122,52 @@ import Body from '../components/Body.astro';
       console.error('No se pudo encontrar el botón de agregar.');
     }
 
-    // Modificar precio producto por ID
+    // Modificar precio producto
     const modificarButton = document.getElementById('modificar') as HTMLButtonElement;
     if (modificarButton) {
       modificarButton.addEventListener('click', async function() {
-        const idElement = document.getElementById('idModificar') as HTMLInputElement;
+        const tituloElement = document.getElementById('tituloModificar') as HTMLInputElement;
         const precioElement = document.getElementById('precioModificar') as HTMLInputElement;
-  
-        if (idElement && precioElement) {
-          const id = idElement.value.trim();
-          const nuevoPrecio = precioElement.value.trim();
-  
-          if (!id || !nuevoPrecio) {
-            alert('Por favor, complete todos los campos.');
-            return;
-          }
-  
+
+        if (tituloElement && precioElement) {
+          const titulo = tituloElement.value;
+          const nuevoPrecio = precioElement.value;
+
           try {
-            // Buscar el producto por ID
-            const response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${id}`);
-  
-            if (!response.ok) {
-              throw new Error('Producto no encontrado.');
-            }
-  
-            const producto = await response.json();
-  
-            if (producto) {
-              // Actualizar el precio del producto
-              producto.precio = nuevoPrecio;
-  
-              const updateResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${id}`, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(producto)
-              });
-  
-              if (updateResponse.ok) {
-                alert('Precio modificado correctamente.');
+            // Primero, buscar el producto por título
+            let response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}`);
+            let productos = await response.json();
+
+            if (productos.length > 0) {
+              // Encontrar el producto con el título dado
+              const producto = productos.find((p: { titulo: string }) => p.titulo === titulo);
+
+              if (producto) {
+                // Actualizar el precio del producto
+                producto.precio = nuevoPrecio;
+
+                const updateResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${producto.id}`, {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(producto)
+                });
+
+                if (updateResponse.ok) {
+                  alert('Precio modificado correctamente.');
+                } else {
+                  alert('Hubo un error al modificar el precio.');
+                }
               } else {
-                const errorText = await updateResponse.text();
-                alert(`Hubo un error al modificar el precio: ${errorText}`);
+                alert('No se encontró un producto con ese título.');
               }
             } else {
-              alert('No se encontró un producto con ese ID.');
+              alert('No se encontró el producto con ese título.');
             }
           } catch (error) {
             console.error('Error en la solicitud: ', error);
-            alert(`Hubo un error al modificar el precio: ${error.message}`);
+            alert('Hubo un error al modificar el precio.');
           }
         } else {
           console.error('No se pudo encontrar uno o más elementos del formulario.');
