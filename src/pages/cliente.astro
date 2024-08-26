@@ -127,20 +127,30 @@ import Body from '../components/Body.astro';
       modificarButton.addEventListener('click', async function() {
         const idElement = document.getElementById('idModificar') as HTMLInputElement;
         const precioElement = document.getElementById('precioModificar') as HTMLInputElement;
-
+  
         if (idElement && precioElement) {
-          const id = idElement.value;
-          const nuevoPrecio = precioElement.value;
-
+          const id = idElement.value.trim();
+          const nuevoPrecio = precioElement.value.trim();
+  
+          if (!id || !nuevoPrecio) {
+            alert('Por favor, complete todos los campos.');
+            return;
+          }
+  
           try {
             // Buscar el producto por ID
             const response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${id}`);
+  
+            if (!response.ok) {
+              throw new Error('Producto no encontrado.');
+            }
+  
             const producto = await response.json();
-
+  
             if (producto) {
               // Actualizar el precio del producto
               producto.precio = nuevoPrecio;
-
+  
               const updateResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${id}`, {
                 method: 'PUT',
                 headers: {
@@ -148,18 +158,19 @@ import Body from '../components/Body.astro';
                 },
                 body: JSON.stringify(producto)
               });
-
+  
               if (updateResponse.ok) {
                 alert('Precio modificado correctamente.');
               } else {
-                alert('Hubo un error al modificar el precio.');
+                const errorText = await updateResponse.text();
+                alert(`Hubo un error al modificar el precio: ${errorText}`);
               }
             } else {
               alert('No se encontró un producto con ese ID.');
             }
           } catch (error) {
             console.error('Error en la solicitud: ', error);
-            alert('Hubo un error al modificar el precio.');
+            alert(`Hubo un error al modificar el precio: ${error.message}`);
           }
         } else {
           console.error('No se pudo encontrar uno o más elementos del formulario.');
