@@ -191,6 +191,7 @@ import Body from '../components/Body.astro';
           try {
             let response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}`);
             let productos = await response.json();
+            console.log(productos);  // Verifica qué productos está devolviendo
 
             if (productos.length > 0) {
               // Buscar coincidencia exacta por título
@@ -200,6 +201,7 @@ import Body from '../components/Body.astro';
                 const deleteResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${producto.id}`, {
                   method: 'DELETE',
                 });
+              console.log(deleteResponse); // Revisa la respuesta de la solicitud DELETE
 
                 if (deleteResponse.ok) {
                   alert('Producto eliminado correctamente.');
