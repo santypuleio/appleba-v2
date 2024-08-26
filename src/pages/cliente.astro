@@ -1,4 +1,3 @@
----
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
@@ -59,8 +58,11 @@ import Body from '../components/Body.astro';
       <div class="form-container">
         <form id="eliminarForm">
           
+          <label for="idEliminar">ID:</label>
+          <input type="text" id="idEliminar" name="id">
+          
           <label for="tituloEliminar">Titulo:</label>
-          <input type="text" id="tituloEliminar" name="titulo" required>
+          <input type="text" id="tituloEliminar" name="titulo">
           
           <button id="eliminar" type="button">Eliminar</button>
         </form>
@@ -184,40 +186,35 @@ import Body from '../components/Body.astro';
     if (eliminarButton) {
       eliminarButton.addEventListener('click', async function() {
         const tituloElement = document.getElementById('tituloEliminar') as HTMLInputElement;
+        const idElement = document.getElementById('idEliminar') as HTMLInputElement;
 
-        if (tituloElement) {
-          const titulo = tituloElement.value;
+        let id = idElement ? idElement.value : null;
+        const titulo = tituloElement ? tituloElement.value : null;
 
+        if (id || titulo) {
           try {
-            let response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}`);
-            let productos = await response.json();
+            let response;
+            if (id) {
+              response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${id}`, {
+                method: 'DELETE',
+              });
+            } else if (titulo) {
+              response = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos?titulo=${encodeURIComponent(titulo)}`, {
+                method: 'DELETE',
+              });
+            }
 
-            if (productos.length > 0) {
-              // Buscar coincidencia exacta por título
-              const producto = productos.find((p: { titulo: string }) => p.titulo === titulo);
-
-              if (producto) {
-                const deleteResponse = await fetch(`https://quasar-scientific-sidewalk.glitch.me/productos/${producto.id}`, {
-                  method: 'DELETE',
-                });
-
-                if (deleteResponse.ok) {
-                  alert('Producto eliminado correctamente.');
-                } else {
-                  alert('Hubo un error al eliminar el producto.');
-                }
-              } else {
-                alert('No se encontró un producto con ese título.');
-              }
+            if (response && response.ok) {
+              alert('Producto eliminado correctamente.');
             } else {
-              alert('No se encontró el producto con ese título.');
+              alert('Hubo un error al eliminar el producto.');
             }
           } catch (error) {
             console.error('Error en la solicitud: ', error);
             alert('Hubo un error al eliminar el producto.');
           }
         } else {
-          console.error('No se pudo encontrar uno o más elementos del formulario.');
+          console.error('Debe proporcionar un ID o un título para eliminar el producto.');
         }
       });
     } else {
@@ -225,7 +222,6 @@ import Body from '../components/Body.astro';
     }
   });
 </script>
-
 
 <style>
   body {
@@ -259,10 +255,10 @@ import Body from '../components/Body.astro';
     background-color: #fff;
     padding: 5rem;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    max-width: 600px; /* Más ancho */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
     width: 100%;
-    transition: max-width 0.3s ease;
+    max-width: 500px;
+    color: #333;
   }
 
   form {
@@ -271,61 +267,38 @@ import Body from '../components/Body.astro';
   }
 
   label {
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #333;
+    margin-bottom: 0.5rem;
   }
 
-  input[type="text"],
-  input[type="url"],
-  input[type="number"],
-  textarea,
-  select {
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
+  input, textarea, select {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
     border-radius: 4px;
-    font-size: 16px;
-    width: 100%;
-  }
-
-  textarea {
-    resize: vertical;
+    border: 1px solid #ddd;
   }
 
   button {
     background-color: #007bff;
     color: white;
-    padding: 10px;
     border: none;
+    padding: 0.75rem 1.5rem;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+    font-size: 1rem;
   }
 
   button:hover {
     background-color: #0056b3;
   }
 
-  /* Responsividad */
-  @media (max-width: 768px) {
-    .form-container {
-      max-width: 90%; /* Para pantallas más pequeñas */
-    }
+  button:disabled {
+    background-color: #d6d6d6;
+    cursor: not-allowed;
   }
 
-  @media (max-width: 480px) {
-    .tituloProducto {
-      font-size: 1.5rem; /* Reducir tamaño del texto en pantallas pequeñas */
-    }
-
-    label {
-      font-size: 14px; /* Ajustar tamaño de fuente de los labels */
-    }
-
-    button {
-      font-size: 14px; /* Ajustar tamaño de fuente del botón */
-    }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
   }
 </style>
