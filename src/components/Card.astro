@@ -44,11 +44,11 @@ const { img, href, title, body, slug, precio } = Astro.props;
   }
 
   .product-image-custom {
-    width: 100% !important;
-    height: auto !important;
-    object-fit: contain !important;
-    min-height: 500px !important;
-    background-color: #f0f0f0 !important;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    aspect-ratio: 16/9;
+    background-color: #f0f0f0;
   }
 
   .product-link {
