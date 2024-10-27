@@ -36,6 +36,7 @@ const { img, href, title, body, slug, precio } = Astro.props;
     background-color: #222;
     color: white;
     border-radius: 7px;
+    overflow: hidden;
   }
 
   .link-card:last-child {
@@ -44,9 +45,11 @@ const { img, href, title, body, slug, precio } = Astro.props;
 
   .product-image {
     width: 100%;
-    height: 500px;
-    object-fit: cover;
-  }
+    height: auto;
+    object-fit: contain;
+    max-height: 350px;
+    background-color: #f0f0f0;
+  }  
 
   .product-link {
     width: 100%;
