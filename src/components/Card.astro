@@ -12,7 +12,7 @@ const { img, href, title, body, slug, precio } = Astro.props;
 ---
 
 <li class="link-card">
-  <img src={img} alt={title} class="product-image">
+  <img src={img} alt={title} class="product-image-custom">
   <a href={`/product/${slug}`} class="product-link">
     <h2 class="product-title">
       {title}
@@ -43,13 +43,13 @@ const { img, href, title, body, slug, precio } = Astro.props;
     margin-bottom: 0;
   }
 
-  .product-image {
-    width: 100%;
-    height: 50%;
-    object-fit: contain;
-    max-height: 350px;
-    background-color: #f0f0f0;
-  }  
+  .product-image-custom {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    max-height: 350px !important;
+    background-color: #f0f0f0 !important;
+  }
 
   .product-link {
     width: 100%;
